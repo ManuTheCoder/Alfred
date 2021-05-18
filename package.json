@@ -8,7 +8,7 @@
   },
   "keywords": [],
   "author": "",
-	"repository": "github:ManuTheCoder/Alfred",
+  "repository": "github:ManuTheCoder/Alfred",
   "license": "ISC",
   "dependencies": {
     "discord.js": "^12.5.3",

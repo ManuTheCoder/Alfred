@@ -47,6 +47,7 @@ client.on("message", (msg) => {
         "Flipped a coin. Result: " + cf[Math.floor(Math.random() * cf.length)]
       );
       break;
+		
     case "!a roll dice":
       msg.reply(
         "Rolled a dice. Result: " +
@@ -69,6 +70,23 @@ You earned ${getRandomInt(100)} coins
 			https://picsum.photos/${getRandomInt(1000)}/${getRandomInt(1000)}?nocache=${encodeURI(new Date())}
 			`);
       break;
+		// Cat Image!
+		case "!a cat":
+      msg.channel.send(`
+			https://cataas.com/cat/says/%20?nocache=${encodeURI(new Date())}
+			`);
+      break;
+		// Gif Cat
+		case "!a cat gif":
+      msg.channel.send(`
+			https://cataas.com/cat/gif?nocache=${encodeURI(new Date())}
+			`);
+      break;
+		case "!a cat cute":
+      msg.channel.send(`
+			https://cataas.com/cat/cute?nocache=${encodeURI(new Date())}
+			`);
+      break;
 
     case "!a help":
       msg.channel.send(`
@@ -78,6 +96,11 @@ You earned ${getRandomInt(100)} coins
 :question:⠀ **!a help** - Ask me for help
 :wave:⠀ **!a hello** - Say Hello to me
 :ice_cube:⠀ **!a play minecraft** - Show me some minecraft
+----------
+:cat:⠀ **!a cat** - Show me a cat image
+:cat:⠀ **!a cat cute** - Show me a cat image (CUTE)
+:cat:⠀ **!a cat gif** - Show me a cat image (GIF)
+----------
 :frame_photo:⠀ **!a random image** - Show random image
 :robot: ⠀**!a roll dice** - Roll a dice
 :coin: ⠀**!a flip coin** - Flip a coin
