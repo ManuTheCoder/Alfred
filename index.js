@@ -43,18 +43,28 @@ client.on("message", (msg) => {
       break;
     // Credits
     case "-a credits":
-      msg.reply("This bot was made by @ManuTheCoder#5821 ");
+		var embed = new Discord.MessageEmbed()
+		        .setTitle("Credits")
+						.setColor([235, 229, 73])
+            .setDescription(`This bot was made by @ManuTheCoder#5821`)
+          msg.channel.send(embed);
       break;
     // Coin Flip
     case "-a flip coin":
-      msg.reply(
-        "Flipped a coin. Result: " + cf[Math.floor(Math.random() * cf.length)]
-      );
+    case "-a coinflip":
+		var embed = new Discord.MessageEmbed()
+		        .setTitle(":coin: Coin Flip :coin:")
+						.setColor([235, 229, 73])
+            .addField("Result: ", getArrayRandomElement(cf))
+          msg.channel.send(embed);
       break;
+/* Coming Soon!
     case "-a meme":
       // var contents = fs.readFileSync('https://meme-api.herokuapp.com/gimme').toString();
       // msg.channel.send(contents)
       break;
+*/
+		// Roll Dice
     case "-a roll dice":
       msg.reply(
         "Rolled a dice. Result: " +
@@ -94,11 +104,13 @@ You earned ${getRandomInt(1, 100)} coins
 			https://cataas.com/cat/gif?nocache=${encodeURI(new Date())}
 			`);
       break;
+		// Cute cat
     case "-a cat cute":
       msg.channel.send(`
 			https://cataas.com/cat/cute?nocache=${encodeURI(new Date())}
 			`);
       break;
+		// Count to 100
     case "-a count":
       var i = 0;
       var s = setInterval(function () {
@@ -110,7 +122,10 @@ You earned ${getRandomInt(1, 100)} coins
         }
       }, 100);
       break;
+		// Commands list
     case "-a help":
+    case "-a commands":
+    case "-a cmds":
       function createNewEmbed() {
         const embed = new Discord.MessageEmbed()
           .setTitle("Commands")
@@ -137,13 +152,13 @@ You earned ${getRandomInt(1, 100)} coins
             `
 :robot: ⠀**-a roll dice** - Roll a dice
 :robot: ⠀**-a rpc [rock, paper, scissors]** - Rock Paper Scissors (Choose one)
-:coin: ⠀**-a flip coin** - Flip a coin
+:coin: ⠀**-a flip coin OR -a coinflip**- Flip a coin
 `
           )
           .addField(
             "Other Commands",
             `
-:question:⠀ **-a help** - Ask me for help
+:question:⠀ **-a help OR -a cmds OR -a commands** - Ask me for help
 :wave:⠀ **-a hello** - Say Hello to me
 :ice_cube:⠀ **-a play minecraft** - Show me some minecraft
 :frame_photo:⠀ **-a random image** - Show random image
@@ -164,6 +179,7 @@ You earned ${getRandomInt(1, 100)} coins
       msg.channel.send(embed);
       break;
     default:
+		  // Rock Paper Scissors
       if (msg.content.includes("-a rpc")) {
         var moves = ["rock", "paper", "scissors"];
         var userInput = msg.content.replace("-a rpc ", "");
@@ -199,6 +215,7 @@ You earned ${getRandomInt(1, 100)} coins
           msg.channel.send(embed);
         }
       }
+			break;
   }
 });
 client.login(process.env.DISCORD_TOKEN);
