@@ -46,7 +46,12 @@ client.on("message", (msg) => {
 		var embed = new Discord.MessageEmbed()
 		        .setTitle("Credits")
 						.setColor([235, 229, 73])
-            .setDescription(`This bot was made by @ManuTheCoder#5821`)
+            .setField("People", "@ManuTheCoder#5821")
+						.setField("Services", `
+	Node.JS
+	Repl.it
+	GitHub					
+	`)
           msg.channel.send(embed);
       break;
     // Coin Flip
