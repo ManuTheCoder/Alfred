@@ -46,8 +46,8 @@ client.on("message", (msg) => {
 		var embed = new Discord.MessageEmbed()
 		        .setTitle("Credits")
 						.setColor([235, 229, 73])
-            .setField("People", "@ManuTheCoder#5821")
-						.setField("Services", `
+            .addField("People", "@ManuTheCoder#5821")
+						.addField("Services", `
 	Node.JS
 	Repl.it
 	GitHub					
