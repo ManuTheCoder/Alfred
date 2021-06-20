@@ -5,6 +5,7 @@
 const express = require("express");
 const app = express();
 const port = 3000;
+const fetch = require("node-fetch");
 app.get("/", (req, res) => res.send("Hello World!"));
 app.listen(port, () =>
   console.log(`Alfred listening at http://localhost:${port}`)
@@ -27,6 +28,7 @@ client.on("ready", () => {
 });
 
 client.on("message", (msg) => {
+  console.log(msg.content.toLowerCase());
   switch (msg.content.toLowerCase()) {
     // Ping Pong!
     case "ping":
@@ -43,38 +45,72 @@ client.on("message", (msg) => {
       break;
     // Credits
     case "-a credits":
-		var embed = new Discord.MessageEmbed()
-		        .setTitle("Credits")
-						.setColor([235, 229, 73])
-            .addField("People", "@ManuTheCoder#5821")
-						.addField("Services", `
+      var embed = new Discord.MessageEmbed()
+        .setTitle("Credits")
+        .setColor([235, 229, 73])
+        .setDescription(
+          "Thanks to these people and services for keeping this bot up & running!"
+        )
+        .addField("People", "@ManuTheCoder#5821")
+        .addField(
+          "Services",
+          `
 	Node.JS
+	ExpressJS
+	CatAas (For cute cats!!!)
+	Picsum.photos (For random photos)
 	Repl.it
 	GitHub					
-	`)
-          msg.channel.send(embed);
+	`
+        );
+      msg.channel.send(embed);
       break;
     // Coin Flip
     case "-a flip coin":
     case "-a coinflip":
-		var embed = new Discord.MessageEmbed()
-		        .setTitle(":coin: Coin Flip :coin:")
-						.setColor([235, 229, 73])
-            .addField("Result: ", getArrayRandomElement(cf))
-          msg.channel.send(embed);
+      var embed = new Discord.MessageEmbed()
+        .setTitle(":coin: Coin Flip :coin:")
+        .setColor([235, 229, 73])
+        .addField("Result: ", getArrayRandomElement(cf));
+      msg.channel.send(embed);
       break;
-/* Coming Soon!
-    case "-a meme":
-      // var contents = fs.readFileSync('https://meme-api.herokuapp.com/gimme').toString();
-      // msg.channel.send(contents)
-      break;
-*/
-		// Roll Dice
+    // Roll Dice
     case "-a roll dice":
-      msg.reply(
-        "Rolled a dice. Result: " +
-          dice1[Math.floor(Math.random() * dice1.length)]
-      );
+    case "-a diceroll":
+      var res = dice1[Math.floor(Math.random() * dice1.length)];
+      switch (res) {
+        case 1:
+          var img =
+            "https://upload.wikimedia.org/wikipedia/commons/1/1b/Dice-1-b.svg";
+          break;
+        case 2:
+          var img =
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Dice-2-b.svg/1200px-Dice-2-b.svg.png";
+          break;
+        case 3:
+          var img =
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Dice-3-b.svg/1024px-Dice-3-b.svg.png";
+          break;
+        case 4:
+          var img =
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Dice-4-b.svg/557px-Dice-4-b.svg.png";
+          break;
+        case 5:
+          var img =
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Dice-5-b.svg/1200px-Dice-5-b.svg.png";
+          break;
+        case 6:
+          var img =
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Dice-6-b.svg/768px-Dice-6-b.svg.png";
+          break;
+      }
+      msg.react("✅");
+      var embed = new Discord.MessageEmbed()
+        .setColor([255, 255, 255])
+        .setTitle("Dice Roll")
+        .setThumbnail(img)
+        .addField("Result ", res);
+      msg.channel.send(embed);
       break;
     // Beg for money
     case "-a beg":
@@ -109,17 +145,17 @@ You earned ${getRandomInt(1, 100)} coins
 			https://cataas.com/cat/gif?nocache=${encodeURI(new Date())}
 			`);
       break;
-		// Cute cat
+    // Cute cat
     case "-a cat cute":
       msg.channel.send(`
 			https://cataas.com/cat/cute?nocache=${encodeURI(new Date())}
 			`);
       break;
-		// Count to 100
+    // Count to 10
     case "-a count":
       var i = 0;
       var s = setInterval(function () {
-        if (i < 100) {
+        if (i < 10) {
           i++;
           msg.channel.send(i);
         } else {
@@ -127,7 +163,37 @@ You earned ${getRandomInt(1, 100)} coins
         }
       }, 100);
       break;
-		// Commands list
+
+    // Emojis!
+    case "-a lenny":
+      var emojis = [
+        "( ͡° ͜ʖ ͡°)",
+        "( ͠° ͟ʖ ͡°)",
+        "( ͡~ ͜ʖ ͡°)",
+        "( ͡ʘ ͜ʖ ͡ʘ)",
+        "( ͡o ͜ʖ ͡o)",
+        "(° ͜ʖ °)",
+        "( ‾ʖ̫‾)",
+        "( ಠ ͜ʖಠ)",
+        "( ͡° ʖ̯ ͡°)",
+        "( ͡ಥ ͜ʖ ͡ಥ)",
+        "༼  ͡° ͜ʖ ͡° ༽",
+        "(▀̿Ĺ̯▀̿ ̿)",
+        "( ✧≖ ͜ʖ≖)",
+        "(ง ͠° ͟ل͜ ͡°)ง",
+        "(͡ ͡° ͜ つ ͡͡°) ",
+        "[̲̅$̲̅(̲̅ ͡° ͜ʖ ͡°̲̅)̲̅$̲̅]",
+        "(✿❦ ͜ʖ ❦)",
+        "ᕦ( ͡° ͜ʖ ͡°)ᕤ",
+        "¯_( ͡° ͜ʖ ͡°)_/¯",
+        "(╯ ͠° ͟ʖ ͡°)╯┻━┻",
+        "( ͡°( ͡° ͜ʖ( ͡° ͜ʖ ͡°)ʖ ͡°) ͡°)",
+        "¯_(ツ)_/¯",
+        "ಠ_ಠ",
+      ];
+      msg.channel.send(getArrayRandomElement(emojis));
+      break;
+    // Commands list
     case "-a help":
     case "-a commands":
     case "-a cmds":
@@ -164,6 +230,7 @@ You earned ${getRandomInt(1, 100)} coins
             "Other Commands",
             `
 :question:⠀ **-a help OR -a cmds OR -a commands** - Ask me for help
+:laugh:⠀ **-a meme** - Show me a meme!
 :wave:⠀ **-a hello** - Say Hello to me
 :ice_cube:⠀ **-a play minecraft** - Show me some minecraft
 :frame_photo:⠀ **-a random image** - Show random image
@@ -183,8 +250,28 @@ You earned ${getRandomInt(1, 100)} coins
       );
       msg.channel.send(embed);
       break;
+
+    case "-a meme":
+      let url = "https://meme-api.herokuapp.com/gimme";
+
+      let settings = { method: "Get" };
+
+      fetch(url, settings)
+        .then((res) => res.json())
+        .then((json) => {
+          console.log(json);
+          var embed = new Discord.MessageEmbed()
+            .setTitle(json.title)
+            .setColor([255, 255, 255])
+            .setURL(json.postLink)
+            .setImage(json.url)
+            .setFooter("👍 " + json.ups + " | " + json.author);
+          msg.channel.send(embed);
+        });
+      break;
+
     default:
-		  // Rock Paper Scissors
+      // Rock Paper Scissors
       if (msg.content.includes("-a rpc")) {
         var moves = ["rock", "paper", "scissors"];
         var userInput = msg.content.replace("-a rpc ", "");
@@ -211,16 +298,30 @@ You earned ${getRandomInt(1, 100)} coins
             stat = "You won!	:partying_face:";
             // win
           }
-
+          switch (userInput) {
+            case "rock":
+              var img =
+                "https://images.vexels.com/media/users/3/145827/isolated/preview/357f06ecbaaa77d750259c459c0ed55f-round-rock-illustration-by-vexels.png";
+              break;
+            case "paper":
+              var img =
+                "https://img.freepik.com/free-vector/white-paper-sheet-illustration_275806-797.jpg?size=338&ext=jpg";
+              break;
+            case "scissors":
+              var img =
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Scissors_icon_black.svg/1024px-Scissors_icon_black.svg.png";
+              break;
+          }
           var embed = new Discord.MessageEmbed()
             .addField("Your input: ", userInput)
             .setColor(color)
             .setTitle(stat)
+            .setThumbnail(img)
             .addField("Computer's input: ", computerInput);
           msg.channel.send(embed);
         }
       }
-			break;
+      break;
   }
 });
 client.login(process.env.DISCORD_TOKEN);
