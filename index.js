@@ -2,11 +2,36 @@
 	Alfred - the Discord Bot!
 	Here's the code for the Alfred bot. Hope you like it
 */
+var http=require('http');
+var url=require('url');
+var fs = require('fs');
+
+var contents = fs.readFileSync('index.html').toString();
+console.log(contents)
+
+
+var server=http.createServer(function(req,res){
+    res.end(contents);
+}).listen(8080);
 const express = require("express");
 const app = express();
 const port = 3000;
 const fetch = require("node-fetch");
-app.get("/", (req, res) => res.send("Hello World!"));
+
+app.get("/", (req, res) =>
+  res.send(`
+<!DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+	</head>
+	<body>
+	Alfred
+	<a href="./terms">Terms</a>
+	</body>
+</html>
+`)
+);
 app.listen(port, () =>
   console.log(`Alfred listening at http://localhost:${port}`)
 );
@@ -24,6 +49,7 @@ function getArrayRandomElement(arr) {
 }
 
 client.on("ready", () => {
+  // client.user.setAvatar('https://media.istockphoto.com/vectors/chat-bot-ai-and-customer-service-support-concept-vector-flat-person-vector-id1221348467?b=1&k=6&m=1221348467&s=612x612&w=0&h=eDVkBNvNtCLsXL40pRs4iwMsO0qZgik81JX1FeO713M=')
   console.log(`Logged in as ${client.user.tag}!`);
 });
 
@@ -230,7 +256,7 @@ You earned ${getRandomInt(1, 100)} coins
             "Other Commands",
             `
 :question:⠀ **-a help OR -a cmds OR -a commands** - Ask me for help
-:laugh:⠀ **-a meme** - Show me a meme!
+:laughing:⠀ **-a meme** - Show me a meme!
 :wave:⠀ **-a hello** - Say Hello to me
 :ice_cube:⠀ **-a play minecraft** - Show me some minecraft
 :frame_photo:⠀ **-a random image** - Show random image
