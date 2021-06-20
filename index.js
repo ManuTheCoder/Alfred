@@ -18,20 +18,7 @@ const app = express();
 const port = 3000;
 const fetch = require("node-fetch");
 
-app.get("/", (req, res) =>
-  res.send(`
-<!DOCTYPE html>
-<html>
-	<head>
-		<title></title>
-	</head>
-	<body>
-	Alfred
-	<a href="./terms">Terms</a>
-	</body>
-</html>
-`)
-);
+
 app.listen(port, () =>
   console.log(`Alfred listening at http://localhost:${port}`)
 );
