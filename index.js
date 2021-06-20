@@ -2,22 +2,21 @@
 	Alfred - the Discord Bot!
 	Here's the code for the Alfred bot. Hope you like it
 */
-var http=require('http');
-var url=require('url');
-var fs = require('fs');
+var http = require("http");
+var url = require("url");
+var fs = require("fs");
 
-var contents = fs.readFileSync('index.html').toString();
-console.log(contents)
+var contents = fs.readFileSync("index.html").toString();
 
-
-var server=http.createServer(function(req,res){
+var server = http
+  .createServer(function (req, res) {
     res.end(contents);
-}).listen(8080);
+  })
+  .listen(8080);
 const express = require("express");
 const app = express();
 const port = 3000;
 const fetch = require("node-fetch");
-
 
 app.listen(port, () =>
   console.log(`Alfred listening at http://localhost:${port}`)
@@ -50,11 +49,6 @@ client.on("message", (msg) => {
     // Hello
     case "-a hello":
       msg.reply("Hello!");
-      break;
-    // Play Minecraft gif!
-    case "-a play minecraft":
-      msg.channel.send("https://i.imgur.com/GVEcfOU.gif");
-      msg.reply("Playing Minecraft all day...");
       break;
     // Credits
     case "-a credits":
@@ -129,10 +123,29 @@ client.on("message", (msg) => {
     case "-a beg":
       var x = cf[Math.floor(Math.random() * cf.length)];
       if (x == "Tails") {
-        msg.channel.send(`
-You earned ${getRandomInt(1, 100)} coins
-*Coin balance coming soon!*
-`);
+        var data = JSON.parse(fs.readFileSync("./database/work.json", "utf-8"));
+        var coinsEarned = getRandomInt(1, 100);
+        if (
+          data[msg.author.id] == "null" ||
+          data[msg.author.id] == "undefined" ||
+          data[msg.author.id] == null
+        ) {
+          data[msg.author.id] = 1;
+        } else {
+          data[msg.author.id] = data[msg.author.id] + coinsEarned;
+        }
+        var embed = new Discord.MessageEmbed()
+          .setTitle("Beg")
+          .setColor([235, 229, 73])
+          .addField("Coins Earned: ", coinsEarned + " coins")
+          .addField("Coin Balance: ", data[msg.author.id] + " coins");
+        msg.channel.send(embed);
+
+        console.log(data);
+        fs.writeFileSync("./database/work.json", JSON.stringify(data), "utf-8");
+
+        console.log("readFileSync complete");
+        msg.react("🪙");
       } else {
         msg.channel.send(`No coins earned`);
       }
@@ -245,7 +258,6 @@ You earned ${getRandomInt(1, 100)} coins
 :question:⠀ **-a help OR -a cmds OR -a commands** - Ask me for help
 :laughing:⠀ **-a meme** - Show me a meme!
 :wave:⠀ **-a hello** - Say Hello to me
-:ice_cube:⠀ **-a play minecraft** - Show me some minecraft
 :frame_photo:⠀ **-a random image** - Show random image
 :slight_smile: **-a help** - Show an embed 
 :robot: ⠀**-a credits**  - Credits for this bot`
@@ -282,7 +294,31 @@ You earned ${getRandomInt(1, 100)} coins
           msg.channel.send(embed);
         });
       break;
+    case "-a work":
+      console.log(msg.author.id);
 
+      var data = JSON.parse(fs.readFileSync("./database/work.json", "utf-8"));
+      if (
+        data[msg.author.id] == "null" ||
+        data[msg.author.id] == "undefined" ||
+        data[msg.author.id] == null
+      ) {
+        data[msg.author.id] = 0;
+      } else {
+        data[msg.author.id] = data[msg.author.id] + 1;
+      }
+      var embed = new Discord.MessageEmbed()
+        .setTitle("Work")
+        .setColor([235, 229, 73])
+        .addField("Coin Balance: ", data[msg.author.id] + " coins");
+      msg.channel.send(embed);
+
+      console.log(data);
+      fs.writeFileSync("./database/work.json", JSON.stringify(data), "utf-8");
+
+      console.log("readFileSync complete");
+      msg.react("💼");
+      break;
     default:
       // Rock Paper Scissors
       if (msg.content.includes("-a rpc")) {
