@@ -33,14 +33,10 @@ function getArrayRandomElement(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
   }
 }
-
-client.on("ready", () => {
-  // client.user.setAvatar('https://media.istockphoto.com/vectors/chat-bot-ai-and-customer-service-support-concept-vector-flat-person-vector-id1221348467?b=1&k=6&m=1221348467&s=612x612&w=0&h=eDVkBNvNtCLsXL40pRs4iwMsO0qZgik81JX1FeO713M=')
-  console.log(`Logged in as ${client.user.tag}!`);
-});
+client.login(process.env.DISCORD_TOKEN);
 
 client.on("message", (msg) => {
-  console.log(msg.content.toLowerCase());
+  // console.log(msg.content.toLowerCase());
   switch (msg.content.toLowerCase()) {
     // Ping Pong!
     case "ping":
@@ -58,7 +54,9 @@ client.on("message", (msg) => {
         .setDescription(
           "Thanks to these people and services for keeping this bot up & running!"
         )
-        .addField("People", "@ManuTheCoder#5821")
+        .addField("People", `
+@ManuTheCoder#5821
+@R22 Gamer#8398`)
         .addField(
           "Services",
           `
@@ -222,7 +220,7 @@ client.on("message", (msg) => {
       var embed = new Discord.MessageEmbed()
         .setTitle("Shop")
         .setColor([235, 229, 73]).setDescription(`
-Coming Soon!
+:lock: **-a buy padlock** - Prevent people from stealing your money!
 					`);
       msg.channel.send(embed);
       break;
@@ -241,7 +239,7 @@ Coming Soon!
           .addField(
             "Remember",
             `
-*Remember - All Commands begin with an \`-a\`*`
+*All Commands begin with an \`-a\`*`
           )
           .addField(
             "Cats",
@@ -254,6 +252,7 @@ Coming Soon!
           .addField(
             "Random",
             `
+:person_pouting: **-a profile** - View profile
 :robot: ⠀**-a roll dice** - Roll a dice
 :robot: ⠀**-a rpc [rock, paper, scissors]** - Rock Paper Scissors (Choose one)
 :coin: ⠀**-a flip coin OR -a coinflip**- Flip a coin
@@ -268,7 +267,17 @@ Coming Soon!
 :frame_photo:⠀ **-a random image** - Show random image
 :slight_smile: **-a help** - Show an embed 
 :robot: ⠀**-a credits**  - Credits for this bot`
-          );
+          )
+					.addField("Money", `
+:moneybag: **-a steal @user** - Steal from a user
+:briefcase: **-a work** - Work
+:money_with_wings: **-a beg** - Beg for coins
+:bank: **-a balance** - View Balance
+`)
+.addField("Shop", `
+:lock: **-a buy padlock** - Prevent people from stealing your money!
+`)
+					;
         msg.channel.send(embed);
       }
       createNewEmbed();
@@ -302,6 +311,7 @@ Coming Soon!
       break;
     case "-a work":
       var data = JSON.parse(fs.readFileSync("./database/work.json", "utf-8"));
+			var ce = getRandomInt(50, 100);
       if (
         data[msg.author.id] == "null" ||
         data[msg.author.id] == "undefined" ||
@@ -309,11 +319,12 @@ Coming Soon!
       ) {
         data[msg.author.id] = 0;
       } else {
-        data[msg.author.id] = data[msg.author.id] + 1;
+        data[msg.author.id] = data[msg.author.id] + ce;
       }
       var embed = new Discord.MessageEmbed()
         .setTitle("Work")
         .setColor([235, 229, 73])
+				.addField("Coins Earned", ce + " :coin:")
         .addField("Coin Balance: ", data[msg.author.id] + " coins");
       msg.channel.send(embed);
 
@@ -321,6 +332,77 @@ Coming Soon!
 
       msg.react("💼");
       break;
+		case "-a balance":
+      var data = JSON.parse(fs.readFileSync("./database/work.json", "utf-8"));
+      if (
+        data[msg.author.id] == "null" ||
+        data[msg.author.id] == "undefined" ||
+        data[msg.author.id] == null
+      ) {
+        data[msg.author.id] = 0;
+      } else {
+        data[msg.author.id];
+      }
+			var userBalance = [];
+			// console.log(msg.guild)
+			// msg.guild.members.forEach(data1 => function(){
+			// 	var data = JSON.parse(fs.readFileSync('./database/work.json', 'utf-8'));
+			// 	data.forEach(e => function() {
+			// 		if(e == data1) {
+			// 			userBalance.push(e)
+			// 		}
+			// 	})
+			// })
+      var embed = new Discord.MessageEmbed()
+        .setTitle("Balance")
+        .setColor([235, 229, 73])
+        .addField("Coin Balance: ", data[msg.author.id] + " coins");
+      msg.channel.send(embed);
+
+      fs.writeFileSync("./database/work.json", JSON.stringify(data), "utf-8");
+
+      break;
+
+
+
+
+
+
+
+			// SHOP
+			case "-a buy padlock":
+				var data = JSON.parse(fs.readFileSync('./database/work.json', 'utf-8'));
+				if(data[msg.author.id] && data[msg.author.id] - 300 >= 0) {
+					data[msg.author.id] = data[msg.author.id] - 300;
+					var inv = JSON.parse(fs.readFileSync('./database/padlocks.json', 'utf-8'));
+					if(inv[msg.author.id] == undefined) {
+						inv[msg.author.id] = 1;
+					}
+					else {
+						inv[msg.author.id]++;
+					}
+					fs.writeFileSync('./database/padlocks.json', JSON.stringify(inv), 'utf-8');
+				}
+				else {
+					msg.channel.send("Not enough Money!")
+				}
+				fs.writeFileSync('./database/work.json', JSON.stringify(data), 'utf-8');
+				msg.channel.send('Purchase complete');
+			break;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     default:
       // Rock Paper Scissors
       if (msg.content.includes("-a rpc")) {
@@ -371,10 +453,22 @@ Coming Soon!
             .addField("Computer's input: ", computerInput);
           msg.channel.send(embed);
         }
-      } else if (msg.content.includes("-a steal")) {
+      } 
+			
+			
+			else if (msg.content.includes("-a steal")) {
         var user = msg.content.replace("-a steal ", "");
         user = user.replace("<@!", "").replace(">", "");
         var data = JSON.parse(fs.readFileSync("./database/work.json", "utf-8"));
+        var noSteal = JSON.parse(fs.readFileSync("./database/padlocks.json", "utf-8"));
+				if(!noSteal[user]) {
+					if(noSteal[user]-1 > 0) {
+						noSteal[user]--
+					}
+					else {
+						noSteal[user] = 0;
+					}
+					fs.writeFileSync('./database/padlocks.json', JSON.stringify(inv), 'utf-8');
         var moneyToSteal = getRandomInt(0, 100);
         if (
           data[user] !== 0 &&
@@ -402,11 +496,30 @@ Coming Soon!
             .setDescription("User doesn't have enough money to steal!");
           msg.channel.send(embed);
         }
+			}
+			else {
+				var e = JSON.parse(fs.readFileSync("./database/work.json", "utf-8"));
+				if(e[msg.author.id]) {
+					e[msg.author.id] = e[msg.author.id] - 500;
+				}
+				msg.channel.send("User has padlock attached to wallet! You got caught lost :coin: 500")
+			}
       }
+			else if (msg.content.includes("-a profile")) {
+				var data = JSON.parse(fs.readFileSync("./database/work.json", "utf-8"));
+				var embed = new Discord.MessageEmbed()
+        	.setTitle("Profile")
+					.setThumbnail("https://cdn.discordapp.com/avatars/" + data[msg.author.avatar] + ".png?size=128")
+					.addField("Balance", (data[msg.author.id] ? data[msg.author.id] : "0") + "Coins")
+  		    msg.channel.send(embed);
+			}
       break;
   }
 });
-client.login(process.env.DISCORD_TOKEN);
+client.on("ready", () => {
+  // client.user.setAvatar('https://media.istockphoto.com/vectors/chat-bot-ai-and-customer-service-support-concept-vector-flat-person-vector-id1221348467?b=1&k=6&m=1221348467&s=612x612&w=0&h=eDVkBNvNtCLsXL40pRs4iwMsO0qZgik81JX1FeO713M=')
+  console.log(`Logged in as ${client.user.tag}!`);
+});
 
 function getRandomInt(min, max) {
   min = Math.ceil(min);
