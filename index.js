@@ -141,10 +141,8 @@ client.on("message", (msg) => {
           .addField("Coin Balance: ", data[msg.author.id] + " coins");
         msg.channel.send(embed);
 
-        console.log(data);
         fs.writeFileSync("./database/work.json", JSON.stringify(data), "utf-8");
 
-        console.log("readFileSync complete");
         msg.react("🪙");
       } else {
         msg.channel.send(`No coins earned`);
@@ -219,6 +217,15 @@ client.on("message", (msg) => {
       ];
       msg.channel.send(getArrayRandomElement(emojis));
       break;
+
+    case "-a shop":
+      var embed = new Discord.MessageEmbed()
+        .setTitle("Shop")
+        .setColor([235, 229, 73]).setDescription(`
+Coming Soon!
+					`);
+      msg.channel.send(embed);
+      break;
     // Commands list
     case "-a help":
     case "-a commands":
@@ -284,7 +291,6 @@ client.on("message", (msg) => {
       fetch(url, settings)
         .then((res) => res.json())
         .then((json) => {
-          console.log(json);
           var embed = new Discord.MessageEmbed()
             .setTitle(json.title)
             .setColor([255, 255, 255])
@@ -295,8 +301,6 @@ client.on("message", (msg) => {
         });
       break;
     case "-a work":
-      console.log(msg.author.id);
-
       var data = JSON.parse(fs.readFileSync("./database/work.json", "utf-8"));
       if (
         data[msg.author.id] == "null" ||
@@ -313,10 +317,8 @@ client.on("message", (msg) => {
         .addField("Coin Balance: ", data[msg.author.id] + " coins");
       msg.channel.send(embed);
 
-      console.log(data);
       fs.writeFileSync("./database/work.json", JSON.stringify(data), "utf-8");
 
-      console.log("readFileSync complete");
       msg.react("💼");
       break;
     default:
@@ -367,6 +369,37 @@ client.on("message", (msg) => {
             .setTitle(stat)
             .setThumbnail(img)
             .addField("Computer's input: ", computerInput);
+          msg.channel.send(embed);
+        }
+      } else if (msg.content.includes("-a steal")) {
+        var user = msg.content.replace("-a steal ", "");
+        user = user.replace("<@!", "").replace(">", "");
+        var data = JSON.parse(fs.readFileSync("./database/work.json", "utf-8"));
+        var moneyToSteal = getRandomInt(0, 100);
+        if (
+          data[user] !== 0 &&
+          data[user] !== "undefined" &&
+          data[user] !== "null" &&
+          data[user] - moneyToSteal >= 0
+        ) {
+          data[user] = data[user] - moneyToSteal;
+          data[msg.author.id] = data[msg.author.id] + moneyToSteal;
+
+          fs.writeFileSync(
+            "./database/work.json",
+            JSON.stringify(data),
+            "utf-8"
+          );
+          var embed = new Discord.MessageEmbed()
+            .setColor([235, 64, 52])
+            .setTitle("Steal")
+            .setDescription("You stole: " + moneyToSteal + " :coin:");
+          msg.channel.send(embed);
+        } else {
+          var embed = new Discord.MessageEmbed()
+            .setColor([235, 64, 52])
+            .setTitle("Steal")
+            .setDescription("User doesn't have enough money to steal!");
           msg.channel.send(embed);
         }
       }
