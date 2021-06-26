@@ -4,23 +4,20 @@
 */
 var http = require("http");
 var url = require("url");
+
 var fs = require("fs");
 
 var contents = fs.readFileSync("index.html").toString();
 
-var server = http
-  .createServer(function (req, res) {
-    res.end(contents);
-  })
-  .listen(8080);
 const express = require("express");
 const app = express();
 const port = 3000;
 const fetch = require("node-fetch");
+app.get('/', (req, res) => res.send(contents));
 
-app.listen(port, () =>
+app.listen(port, () =>{
   console.log(`Alfred listening at http://localhost:${port}`)
-);
+});
 
 const Discord = require("discord.js");
 const client = new Discord.Client();
@@ -34,14 +31,45 @@ function getArrayRandomElement(arr) {
   }
 }
 client.login(process.env.DISCORD_TOKEN);
+const talkedRecently = new Set();
+
+client.on("guildMemberAdd", (member) => {
+  // Send the message to a designated channel on a server:
+  const channel = member.guild.channels.cache.find(
+    (ch) => ch.name === "member-log"
+  );
+  // Do nothing if the channel wasn't found on this server
+  if (!channel) return;
+  // Send the message, mentioning the member
+  channel.send(`Welcome to the server, ${member}`);
+});
 
 client.on("message", (msg) => {
-  // console.log(msg.content.toLowerCase());
+  // console.log(msg)
+  console.log(msg.content.toLowerCase());
+  if (!msg.channel.nsfw || msg.author.id == "") {
+    // yeah blacklist bad words
+    var profanities = [
+      "ass",
+      "fuck",
+      "bitch",
+      "shit",
+      "bastard",
+      "asshole",
+      "dick",
+    ];
+    var regex = new RegExp(`(\\b|\\d)(${profanities.join("|")})(\\b|\\d)`, "i");
+    if (regex.test(msg.content.toLowerCase())) {
+      // msg.channel.send("No profanity!")
+      var embed = new Discord.MessageEmbed()
+        .setTitle("Deleted!")
+        .setColor([252, 25, 67])
+        .setDescription("No profanity!");
+      msg.channel.send(embed);
+      msg.delete();
+    }
+  }
   switch (msg.content.toLowerCase()) {
-    // Ping Pong!
-    case "ping":
-      msg.reply("pong!");
-      break;
     // Hello
     case "-a hello":
       msg.reply("Hello!");
@@ -54,9 +82,12 @@ client.on("message", (msg) => {
         .setDescription(
           "Thanks to these people and services for keeping this bot up & running!"
         )
-        .addField("People", `
+        .addField(
+          "People",
+          `
 @ManuTheCoder#5821
-@R22 Gamer#8398`)
+@R22 Gamer#8398`
+        )
         .addField(
           "Services",
           `
@@ -74,7 +105,9 @@ client.on("message", (msg) => {
     case "-a flip coin":
     case "-a coinflip":
       var embed = new Discord.MessageEmbed()
-        .setTitle(":coin: Coin Flip :coin:")
+        .setTitle(
+          "<:Alferdocoins:856991023754772521> Coin Flip <:Alferdocoins:856991023754772521>"
+        )
         .setColor([235, 229, 73])
         .addField("Result: ", getArrayRandomElement(cf));
       msg.channel.send(embed);
@@ -119,31 +152,56 @@ client.on("message", (msg) => {
       break;
     // Beg for money
     case "-a beg":
-      var x = cf[Math.floor(Math.random() * cf.length)];
-      if (x == "Tails") {
-        var data = JSON.parse(fs.readFileSync("./database/work.json", "utf-8"));
-        var coinsEarned = getRandomInt(1, 100);
-        if (
-          data[msg.author.id] == "null" ||
-          data[msg.author.id] == "undefined" ||
-          data[msg.author.id] == null
-        ) {
-          data[msg.author.id] = 1;
-        } else {
-          data[msg.author.id] = data[msg.author.id] + coinsEarned;
-        }
+      if (talkedRecently.has(msg.author.id)) {
         var embed = new Discord.MessageEmbed()
-          .setTitle("Beg")
-          .setColor([235, 229, 73])
-          .addField("Coins Earned: ", coinsEarned + " coins")
-          .addField("Coin Balance: ", data[msg.author.id] + " coins");
+          .setTitle("Slow it down!")
+          .setColor([222, 38, 53])
+          .setDescription(
+            "Whoah whoah woah. Easy there buddy! There's no point in spamming this command. You are tired from begging, and you need to wait 5 seconds before working again,  " +
+              "<@!" +
+              msg.author +
+              ">"
+          );
         msg.channel.send(embed);
-
-        fs.writeFileSync("./database/work.json", JSON.stringify(data), "utf-8");
-
-        msg.react("🪙");
+        // msg.channel.send("Whoah whoah woah. Easy there buddy! There's no point in spamming this command. You are tired from working, and you need to wait 1 min " + "<@!" + msg.author + ">");
       } else {
-        msg.channel.send(`No coins earned`);
+        var x = cf[Math.floor(Math.random() * cf.length)];
+        if (x == "Tails") {
+          var data = JSON.parse(
+            fs.readFileSync("./database/money.json", "utf-8")
+          );
+          var coinsEarned = getRandomInt(1, 10);
+          if (
+            data[msg.author.id] == "null" ||
+            data[msg.author.id] == "undefined" ||
+            data[msg.author.id] == null
+          ) {
+            data[msg.author.id] = 1;
+          } else {
+            data[msg.author.id] = data[msg.author.id] + coinsEarned;
+          }
+          var embed = new Discord.MessageEmbed()
+            .setTitle("Beg")
+            .setColor([235, 229, 73])
+            .addField("Coins Earned: ", coinsEarned + " coins")
+            .addField("Coin Balance: ", data[msg.author.id] + " coins");
+          msg.channel.send(embed);
+
+          fs.writeFileSync(
+            "./database/money.json",
+            JSON.stringify(data),
+            "utf-8"
+          );
+
+          msg.react("🪙");
+        } else {
+          msg.channel.send(`No coins earned`);
+        }
+        talkedRecently.add(msg.author.id);
+        setTimeout(() => {
+          // Removes the user from the set after a minute
+          talkedRecently.delete(msg.author.id);
+        }, 5000);
       }
       break;
     // Random Image
@@ -220,18 +278,63 @@ client.on("message", (msg) => {
       var embed = new Discord.MessageEmbed()
         .setTitle("Shop")
         .setColor([235, 229, 73]).setDescription(`
-:lock: **-a buy padlock** - Prevent people from stealing your money!
+\$300 \`-a buy padlock\` - Prevent people from stealing your money!
 					`);
+      msg.channel.send(embed);
+      break;
+
+    case "-a pet list":
+      var embed = new Discord.MessageEmbed()
+        .setTitle("Pets")
+        .setThumbnail(
+          "http://dogprintsgrooming.com/wp-content/uploads/2015/03/Dog_Print_Icons_3.png"
+        )
+        .setFooter(
+          "Tip: Enter -a buy [PET NAME] to buy a pet\n Example: -a buy dog"
+        )
+        .setColor([
+          getRandomInt(0, 255),
+          getRandomInt(0, 255),
+          getRandomInt(0, 255),
+        ])
+        .addField(
+          "Pets",
+          `
+**Dog** -   300 <:Alferdocoins:856991023754772521>
+**Cat** -   300 <:Alferdocoins:856991023754772521>
+**Parrot** -   350 <:Alferdocoins:856991023754772521>
+**Rock** -  300 <:Alferdocoins:856991023754772521>
+**Frog** -  400 <:Alferdocoins:856991023754772521>
+**Lizard** -  400 <:Alferdocoins:856991023754772521>
+**Owl** -  500 <:Alferdocoins:856991023754772521>
+**Snake** -   550 <:Alferdocoins:856991023754772521>
+**Tropical Parakeet** -   600 <:Alferdocoins:856991023754772521>
+**Cougar** -  600 <:Alferdocoins:856991023754772521>
+**Tiger** -  800 <:Alferdocoins:856991023754772521>
+`
+        )
+        .addField(
+          "Legendary Pets",
+          `
+Dragon -   5000 <:Alferdocoins:856991023754772521>
+Arctic Wolf -  4500 <:Alferdocoins:856991023754772521>
+Eagle -  2000 <:Alferdocoins:856991023754772521>`
+        );
       msg.channel.send(embed);
       break;
     // Commands list
     case "-a help":
     case "-a commands":
+    case "<@!844303394335096862>":
     case "-a cmds":
       function createNewEmbed() {
         const embed = new Discord.MessageEmbed()
           .setTitle("Commands")
-          .setColor([62, 150, 62])
+          .setColor([
+            getRandomInt(0, 255),
+            getRandomInt(0, 255),
+            getRandomInt(0, 255),
+          ])
           .setFooter("More features Coming Soon!")
           .setThumbnail(
             "https://icons-for-free.com/iconfiles/png/512/circle+command+key+keyboard+modifier+icon-1320196704338840666.png"
@@ -255,7 +358,7 @@ client.on("message", (msg) => {
 :person_pouting: **-a profile** - View profile
 :robot: ⠀**-a roll dice** - Roll a dice
 :robot: ⠀**-a rpc [rock, paper, scissors]** - Rock Paper Scissors (Choose one)
-:coin: ⠀**-a flip coin OR -a coinflip**- Flip a coin
+<:Alferdocoins:856991023754772521> ⠀**-a flip coin OR -a coinflip**- Flip a coin
 `
           )
           .addField(
@@ -268,16 +371,25 @@ client.on("message", (msg) => {
 :slight_smile: **-a help** - Show an embed 
 :robot: ⠀**-a credits**  - Credits for this bot`
           )
-					.addField("Money", `
+          .addField(
+            "Money",
+            `
 :moneybag: **-a steal @user** - Steal from a user
 :briefcase: **-a work** - Work
+:money_with_mouth: **-a leaderboard** - View top 10 richest people in server
 :money_with_wings: **-a beg** - Beg for coins
 :bank: **-a balance** - View Balance
-`)
-.addField("Shop", `
-:lock: **-a buy padlock** - Prevent people from stealing your money!
-`)
-					;
+`
+          )
+          .addField(
+            "Shop & Pets",
+            `
+Use \`-a shop\` for list of items
+Use \`-a pet list\` for list of pets
+Use \`-a buy [PET NAME]\` to buy a pet
+Use \`-a my pets\` to view pets owned
+`
+          );
         msg.channel.send(embed);
       }
       createNewEmbed();
@@ -302,7 +414,11 @@ client.on("message", (msg) => {
         .then((json) => {
           var embed = new Discord.MessageEmbed()
             .setTitle(json.title)
-            .setColor([255, 255, 255])
+            .setColor([
+              getRandomInt(0, 255),
+              getRandomInt(0, 255),
+              getRandomInt(0, 255),
+            ])
             .setURL(json.postLink)
             .setImage(json.url)
             .setFooter("👍 " + json.ups + " | " + json.author);
@@ -310,30 +426,118 @@ client.on("message", (msg) => {
         });
       break;
     case "-a work":
-      var data = JSON.parse(fs.readFileSync("./database/work.json", "utf-8"));
-			var ce = getRandomInt(50, 100);
-      if (
-        data[msg.author.id] == "null" ||
-        data[msg.author.id] == "undefined" ||
-        data[msg.author.id] == null
-      ) {
-        data[msg.author.id] = 0;
+      console.log(talkedRecently);
+      if (talkedRecently.has(msg.author.id)) {
+        var embed = new Discord.MessageEmbed()
+          .setTitle("Slow it down!")
+          .setColor([222, 38, 53])
+          .setDescription(
+            "Whoah whoah woah. Easy there buddy! There's no point in spamming this command. You are tired from working, and you need to wait 5 seconds before working again,  " +
+              "<@!" +
+              msg.author +
+              ">"
+          );
+        msg.channel.send(embed);
+        // msg.channel.send("Whoah whoah woah. Easy there buddy! There's no point in spamming this command. You are tired from working, and you need to wait 1 min " + "<@!" + msg.author + ">");
       } else {
-        data[msg.author.id] = data[msg.author.id] + ce;
+        var data = JSON.parse(
+          fs.readFileSync("./database/money.json", "utf-8")
+        );
+        var ce = getRandomInt(5, 20);
+        if (
+          data[msg.author.id] == "null" ||
+          data[msg.author.id] == "undefined" ||
+          data[msg.author.id] == null
+        ) {
+          data[msg.author.id] = 0;
+        } else {
+          data[msg.author.id] = data[msg.author.id] + ce;
+        }
+        var embed = new Discord.MessageEmbed()
+          .setTitle("Work")
+          .setColor([
+            getRandomInt(0, 255),
+            getRandomInt(0, 255),
+            getRandomInt(0, 255),
+          ])
+          .addField("Coins Earned", ce + " <:Alferdocoins:856991023754772521>")
+          .addField("Coin Balance: ", data[msg.author.id] + " coins");
+        msg.channel.send(embed);
+
+        fs.writeFileSync(
+          "./database/money.json",
+          JSON.stringify(data),
+          "utf-8"
+        );
+
+        msg.react("💼");
+        talkedRecently.add(msg.author.id);
+        setTimeout(() => {
+          // Removes the user from the set after a minute
+          talkedRecently.delete(msg.author.id);
+        }, 5000);
       }
-      var embed = new Discord.MessageEmbed()
-        .setTitle("Work")
-        .setColor([235, 229, 73])
-				.addField("Coins Earned", ce + " :coin:")
-        .addField("Coin Balance: ", data[msg.author.id] + " coins");
-      msg.channel.send(embed);
-
-      fs.writeFileSync("./database/work.json", JSON.stringify(data), "utf-8");
-
-      msg.react("💼");
       break;
-		case "-a balance":
-      var data = JSON.parse(fs.readFileSync("./database/work.json", "utf-8"));
+    case "-a my pets":
+      var pet_db = JSON.parse(fs.readFileSync("./database/pets.json", "utf-8"));
+      if (pet_db[msg.author.id]) {
+        pet_db = pet_db[msg.author.id];
+        var pets = "";
+        for (const [key, value] of Object.entries(pet_db)) {
+          pets += `**${value}** ${key}s
+`;
+        }
+        var embed = new Discord.MessageEmbed()
+          .setTitle("Pets")
+          .setColor([235, 229, 73])
+          .setDescription(pets);
+        msg.channel.send(embed);
+      } else {
+        var embed = new Discord.MessageEmbed()
+          .setTitle("Pets")
+          .setColor([235, 229, 73])
+          .setDescription(
+            "No pets owned. Use `-a pet list` to see the list of pets and `-a buy [pet]` to buy a pet."
+          );
+        msg.channel.send(embed);
+      }
+      break;
+    case "-a leaderboard":
+    case "-a top":
+    case "-a richest":
+      var people = [];
+      var db = JSON.parse(fs.readFileSync("./database/money.json", "utf-8"));
+      const Guild = client.guilds.cache.get(msg.guild.id); // Getting the guild.
+      const Members = Guild.members.cache.map((member) => member.id); // Getting the members and mapping them by ID.
+      var members;
+      Members.forEach((e) => {
+        for (const [key, value] of Object.entries(db)) {
+          if (e == key) {
+            people.push({
+              KEY: key,
+              VALUE: value,
+            });
+          }
+        }
+      });
+      people = people.sort(compare).reverse();
+      var people1 = people;
+      people = "";
+      people1.slice(0, 10).forEach((e) => {
+        var username = client.users.cache.get(e.KEY).username;
+        people += ` **${username.trim()}** - ${
+          e.VALUE
+        }  <:Alferdocoins:856991023754772521>
+				`;
+      });
+      var embed = new Discord.MessageEmbed()
+        .setTitle("Top 10 richest people in this server")
+        .setColor([235, 229, 73])
+        .setDescription(people);
+      msg.channel.send(embed);
+      break;
+    case "-a balance":
+      var data = JSON.parse(fs.readFileSync("./database/money.json", "utf-8"));
       if (
         data[msg.author.id] == "null" ||
         data[msg.author.id] == "undefined" ||
@@ -343,69 +547,45 @@ client.on("message", (msg) => {
       } else {
         data[msg.author.id];
       }
-			var userBalance = [];
-			// console.log(msg.guild)
-			// msg.guild.members.forEach(data1 => function(){
-			// 	var data = JSON.parse(fs.readFileSync('./database/work.json', 'utf-8'));
-			// 	data.forEach(e => function() {
-			// 		if(e == data1) {
-			// 			userBalance.push(e)
-			// 		}
-			// 	})
-			// })
       var embed = new Discord.MessageEmbed()
         .setTitle("Balance")
         .setColor([235, 229, 73])
         .addField("Coin Balance: ", data[msg.author.id] + " coins");
       msg.channel.send(embed);
 
-      fs.writeFileSync("./database/work.json", JSON.stringify(data), "utf-8");
+      fs.writeFileSync("./database/money.json", JSON.stringify(data), "utf-8");
 
       break;
 
-
-
-
-
-
-
-			// SHOP
-			case "-a buy padlock":
-				var data = JSON.parse(fs.readFileSync('./database/work.json', 'utf-8'));
-				if(data[msg.author.id] && data[msg.author.id] - 300 >= 0) {
-					data[msg.author.id] = data[msg.author.id] - 300;
-					var inv = JSON.parse(fs.readFileSync('./database/padlocks.json', 'utf-8'));
-					if(inv[msg.author.id] == undefined) {
-						inv[msg.author.id] = 1;
-					}
-					else {
-						inv[msg.author.id]++;
-					}
-					fs.writeFileSync('./database/padlocks.json', JSON.stringify(inv), 'utf-8');
-				}
-				else {
-					msg.channel.send("Not enough Money!")
-				}
-				fs.writeFileSync('./database/work.json', JSON.stringify(data), 'utf-8');
-				msg.channel.send('Purchase complete');
-			break;
-
-
-
-
-
-
-
-
-
-
-
-
-
+    // SHOP
+    case "-a buy padlock":
+      var data = JSON.parse(fs.readFileSync("./database/money.json", "utf-8"));
+      if (data[msg.author.id] && data[msg.author.id] - 300 >= 0) {
+        data[msg.author.id] = data[msg.author.id] - 300;
+        var inv = JSON.parse(
+          fs.readFileSync("./database/padlocks.json", "utf-8")
+        );
+        if (inv[msg.author.id] == undefined) {
+          inv[msg.author.id] = 1;
+        } else {
+          inv[msg.author.id]++;
+        }
+        fs.writeFileSync(
+          "./database/padlocks.json",
+          JSON.stringify(inv),
+          "utf-8"
+        );
+      } else {
+        msg.channel.send("Not enough Money!");
+      }
+      fs.writeFileSync("./database/money.json", JSON.stringify(data), "utf-8");
+      msg.channel.send(`**Purchase complete**
+Padlocks are applied automatically!`);
+      break;
 
     default:
       // Rock Paper Scissors
-      if (msg.content.includes("-a rpc")) {
+      if (msg.content.startsWith("-a rpc")) {
         var moves = ["rock", "paper", "scissors"];
         var userInput = msg.content.replace("-a rpc ", "");
         if (
@@ -453,66 +633,303 @@ client.on("message", (msg) => {
             .addField("Computer's input: ", computerInput);
           msg.channel.send(embed);
         }
-      } 
-			
-			
-			else if (msg.content.includes("-a steal")) {
+      } else if (msg.content.startsWith("-a buy")) {
+        if (msg.content !== "-a buy") {
+          var pet = msg.content.replace("-a buy ", "");
+          var price;
+          var db = JSON.parse(
+            fs.readFileSync("./database/money.json", "utf-8")
+          );
+          switch (pet) {
+            case "dog":
+              price = 300;
+              break;
+            case "lizard":
+              price = 500;
+              break;
+            case "cat":
+              price = 300;
+              break;
+            case "parrot":
+              price = 350;
+              break;
+            case "rock":
+              price = 300;
+              break;
+            case "frog":
+              price = 400;
+              break;
+            case "owl":
+              price = 500;
+              break;
+            case "snake":
+              price = 550;
+              break;
+            case "tropical parakeet":
+              price = 600;
+              break;
+            case "cougar":
+              price = 600;
+              break;
+            case "tiger":
+              price = 800;
+              break;
+            case "dragon":
+              price = 5000;
+              break;
+            case "arctic wolf":
+              price = 4500;
+              break;
+            case "eagle":
+              price = 2000;
+              break;
+          }
+
+          if (db[msg.author.id] >= price) {
+            db[msg.author.id] = db[msg.author.id] - price;
+            var pet_db = JSON.parse(
+              fs.readFileSync("./database/pets.json", "utf-8")
+            );
+
+            if (pet_db[msg.author.id]) {
+              var user = pet_db[msg.author.id];
+              if (user[pet]) {
+                user[pet]++;
+              } else {
+                user[pet] = 1;
+              }
+            } else {
+              pet_db[msg.author.id] = {};
+              var user = pet_db[msg.author.id];
+              if (user[pet]) {
+                user[pet]++;
+              } else {
+                user[pet] = 1;
+              }
+            }
+            fs.writeFileSync(
+              "./database/pets.json",
+              JSON.stringify(pet_db),
+              "utf-8"
+            );
+            fs.writeFileSync(
+              "./database/money.json",
+              JSON.stringify(db),
+              "utf-8"
+            );
+            msg.reply("Bought pet successfully!");
+          } else {
+            msg.reply("You don't have enough money!");
+          }
+        } else {
+          msg.reply("Invalid pet name");
+        }
+      } else if (msg.content.startsWith("-a steal")) {
         var user = msg.content.replace("-a steal ", "");
         user = user.replace("<@!", "").replace(">", "");
-        var data = JSON.parse(fs.readFileSync("./database/work.json", "utf-8"));
-        var noSteal = JSON.parse(fs.readFileSync("./database/padlocks.json", "utf-8"));
-				if(!noSteal[user]) {
-					if(noSteal[user]-1 > 0) {
-						noSteal[user]--
-					}
-					else {
-						noSteal[user] = 0;
-					}
-					fs.writeFileSync('./database/padlocks.json', JSON.stringify(inv), 'utf-8');
-        var moneyToSteal = getRandomInt(0, 100);
-        if (
-          data[user] !== 0 &&
-          data[user] !== "undefined" &&
-          data[user] !== "null" &&
-          data[user] - moneyToSteal >= 0
-        ) {
-          data[user] = data[user] - moneyToSteal;
-          data[msg.author.id] = data[msg.author.id] + moneyToSteal;
-
+        var data = JSON.parse(
+          fs.readFileSync("./database/money.json", "utf-8")
+        );
+        var noSteal = JSON.parse(
+          fs.readFileSync("./database/padlocks.json", "utf-8")
+        );
+        if (!noSteal[user] > 0) {
+          if (noSteal[user] - 1 >= 0) {
+            noSteal[user]--;
+          } else {
+            noSteal[user] = 0;
+          }
           fs.writeFileSync(
-            "./database/work.json",
-            JSON.stringify(data),
+            "./database/padlocks.json",
+            JSON.stringify(noSteal),
             "utf-8"
           );
+          var moneyToSteal = getRandomInt(0, 100);
+          if (
+            data[user] !== 0 &&
+            data[user] !== "undefined" &&
+            data[user] !== "null" &&
+            data[user] - moneyToSteal >= 0
+          ) {
+            data[user] = data[user] - moneyToSteal;
+            data[msg.author.id] = data[msg.author.id] + moneyToSteal;
+
+            fs.writeFileSync(
+              "./database/money.json",
+              JSON.stringify(data),
+              "utf-8"
+            );
+            var embed = new Discord.MessageEmbed()
+              .setColor([235, 64, 52])
+              .setTitle("Steal")
+              .setDescription(
+                "You stole: " +
+                  moneyToSteal +
+                  " <:Alferdocoins:856991023754772521>"
+              );
+            msg.channel.send(embed);
+          } else {
+            var embed = new Discord.MessageEmbed()
+              .setColor([235, 64, 52])
+              .setTitle("Steal")
+              .setDescription("User doesn't have enough money to steal!");
+            msg.channel.send(embed);
+          }
+        } else {
+          if (noSteal[user] - 1 >= 0) {
+            noSteal[user]--;
+          }
+          var e = JSON.parse(fs.readFileSync("./database/money.json", "utf-8"));
+          if (e[msg.author.id]) {
+            e[msg.author.id] = e[msg.author.id] - 500;
+          }
+          fs.writeFileSync("./database/money.json", JSON.stringify(e), "utf-8");
+          fs.writeFileSync(
+            "./database/padlocks.json",
+            JSON.stringify(noSteal),
+            "utf-8"
+          );
+          msg.channel.send(
+            "User has padlock attached to wallet! You got caught lost <:Alferdocoins:856991023754772521> 500"
+          );
+        }
+      } else if (msg.content.startsWith("-a profile")) {
+				var people = [];
+				var db = JSON.parse(fs.readFileSync("./database/money.json", "utf-8"));
+				const Guild = client.guilds.cache.get(msg.guild.id); // Getting the guild.
+				const Members = Guild.members.cache.map((member) => member.id); // Getting the members and mapping them by ID.
+				var members;
+				Members.forEach((e) => {
+					for (const [key, value] of Object.entries(db)) {
+						if (e == key) {
+							people.push({
+								KEY: key,
+								VALUE: value,
+							});
+						}
+					}
+				});
+				people = people.sort(compare).reverse();
+
+
+        if (msg.content == "-a profile") {
+          var user = {
+            id: msg.author.id,
+            name: msg.author.tag,
+            pic: msg.author.avatar,
+						bot: msg.author.bot,
+            full: msg.author,
+          };
+        } else {
+          var tag = client.users.cache.get(msg.content.replace(/\D/g, ""));
+          var user = {
+            id: msg.content.replace(/\D/g, ""),
+            name: tag.tag,
+            pic: tag.avatar,
+            full: tag,
+						bot: tag.bot
+          };
+        }
+				if(user.bot == false) {
+        var pet_db = JSON.parse(
+          fs.readFileSync("./database/pets.json", "utf-8")
+        );
+        if (pet_db[msg.author.id]) {
+          pet_db = pet_db[user.id];
+          var pets = "";
+					if(pet_db !== "undefined" && pet_db !== undefined) {
+          for (const [key, value] of Object.entries(pet_db)) {
+            pets += `**${value}** ${key}s
+`;
+          }
+					}
+					else {
+						pets = "No pets owned"
+					}
+        } else {
+          var pets = "No pets owned.";
+        }
+        console.log(user.full);
+				var found = false;
+					for(var i = 0; i < people.length; i++) {
+							if (people[i].KEY == user.id) {
+									found = true;
+									break;
+							}
+					}
+        var data = JSON.parse(
+          fs.readFileSync("./database/money.json", "utf-8")
+        );
+        var embed = new Discord.MessageEmbed()
+          .setTitle(user.name)
+					.setDescription("" + (found == true ? " :moneybag: Top 10 richest people in server!" : ""))
+          .setThumbnail(
+            "https://cdn.discordapp.com/avatars/" +
+              user.id +
+              "/" +
+              user.pic +
+              ".png?size=256"
+          )
+          .addField(
+            "Balance",
+            (data[user.id] ? data[user.id] : "0") +
+              " <:Alferdocoins:856991023754772521>"
+          )
+          .addField("Pets", pets)
+          .addField("XP", "Coming Soon!");
+        msg.channel.send(embed);
+				}
+				else {
+					msg.reply("User is bot!")
+				}
+      } else if (msg.content.startsWith("-a slots")) {
+        if (msg.content == "-a slots") {
           var embed = new Discord.MessageEmbed()
-            .setColor([235, 64, 52])
-            .setTitle("Steal")
-            .setDescription("You stole: " + moneyToSteal + " :coin:");
+            .setTitle(
+              "<:Alferdocoins:856991023754772521> Slots <:Alferdocoins:856991023754772521>"
+            )
+            .setColor([235, 229, 73])
+            .setDescription(
+              "Incorrect value for slots. Please specify money to earn/lose. Example: -a slots 10"
+            );
           msg.channel.send(embed);
         } else {
-          var embed = new Discord.MessageEmbed()
-            .setColor([235, 64, 52])
-            .setTitle("Steal")
-            .setDescription("User doesn't have enough money to steal!");
-          msg.channel.send(embed);
+          var slots = parseInt(msg.content.replace("-a slots ", ""));
+          var s = getArrayRandomElement(cf);
+          var db = JSON.parse(
+            fs.readFileSync("./database/money.json", "utf-8")
+          );
+          console.log(db[msg.author.id] - slots);
+          if (
+            db[msg.author.id] &&
+            parseInt(db[msg.author.id]) - parseInt(slots) >= 0
+          ) {
+            if (s == "Heads") {
+              db[msg.author.id] = db[msg.author.id] + slots;
+              msg.reply(
+                "You won <:Alferdocoins:856991023754772521>⠀" + slots + "!"
+              );
+              fs.writeFileSync(
+                "./database/money.json",
+                JSON.stringify(db),
+                "utf-8"
+              );
+            } else {
+              db[msg.author.id] = db[msg.author.id] - slots;
+              msg.reply(
+                "You lost <:Alferdocoins:856991023754772521>⠀" + slots + "!"
+              );
+              fs.writeFileSync(
+                "./database/money.json",
+                JSON.stringify(db),
+                "utf-8"
+              );
+            }
+          } else {
+            msg.reply("Not enough coins!");
+          }
         }
-			}
-			else {
-				var e = JSON.parse(fs.readFileSync("./database/work.json", "utf-8"));
-				if(e[msg.author.id]) {
-					e[msg.author.id] = e[msg.author.id] - 500;
-				}
-				msg.channel.send("User has padlock attached to wallet! You got caught lost :coin: 500")
-			}
       }
-			else if (msg.content.includes("-a profile")) {
-				var data = JSON.parse(fs.readFileSync("./database/work.json", "utf-8"));
-				var embed = new Discord.MessageEmbed()
-        	.setTitle("Profile")
-					.setThumbnail("https://cdn.discordapp.com/avatars/" + data[msg.author.avatar] + ".png?size=128")
-					.addField("Balance", (data[msg.author.id] ? data[msg.author.id] : "0") + "Coins")
-  		    msg.channel.send(embed);
-			}
       break;
   }
 });
@@ -525,4 +942,13 @@ function getRandomInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+function compare(a, b) {
+  if (a.VALUE < b.VALUE) {
+    return -1;
+  }
+  if (a.VALUE > b.VALUE) {
+    return 1;
+  }
+  return 0;
 }
