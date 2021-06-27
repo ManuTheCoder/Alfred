@@ -71,6 +71,26 @@ client.on("message", (msg) => {
   }
   switch (msg.content.toLowerCase()) {
     // Hello
+		case "-a toggle passive mode":
+				var db = JSON.parse(fs.readFileSync("./database/passive.json", "utf-8"));
+				if(db[msg.author.id] !== "undefined") {
+					if(db[msg.author.id] == false) {
+						db[msg.author.id] = true
+					}
+					else {
+						db[msg.author.id] = true
+					}
+				}
+				else {
+					db[msg.author.id] = false
+				}
+				fs.writeFileSync(
+            "./database/passive.json",
+            JSON.stringify(db),
+            "utf-8"
+          );
+
+		 		break;
     case "-a hello":
       msg.reply("Hello!");
       break;
@@ -369,7 +389,9 @@ Eagle -  2000 <:Alferdocoins:856991023754772521>`
 :wave:⠀ **-a hello** - Say Hello to me
 :frame_photo:⠀ **-a random image** - Show random image
 :slight_smile: **-a help** - Show an embed 
-:robot: ⠀**-a credits**  - Credits for this bot`
+:robot: ⠀**-a credits**  - Credits for this bot
+**-a r :slight_smile: ** - (For example), react to the last message in current channel
+`
           )
           .addField(
             "Money",
@@ -727,12 +749,15 @@ Padlocks are applied automatically!`);
       } else if (msg.content.startsWith("-a steal")) {
         var user = msg.content.replace("-a steal ", "");
         user = user.replace("<@!", "").replace(">", "");
+				var tag = client.users.cache.get(user);
+				if(user.bot == false) {
         var data = JSON.parse(
           fs.readFileSync("./database/money.json", "utf-8")
         );
         var noSteal = JSON.parse(
           fs.readFileSync("./database/padlocks.json", "utf-8")
         );
+				var passive = JSON.parse(fs.readFileSync("./database/passive.json", "utf-8"));
         if (!noSteal[user] > 0) {
           if (noSteal[user] - 1 >= 0) {
             noSteal[user]--;
@@ -793,6 +818,10 @@ Padlocks are applied automatically!`);
             "User has padlock attached to wallet! You got caught lost <:Alferdocoins:856991023754772521> 500"
           );
         }
+				}
+				else {
+					msg.channel.send("Hey, go pick on someone your own size! You can't steal from bots....")
+				}
       } else if (msg.content.startsWith("-a profile")) {
 				var people = [];
 				var db = JSON.parse(fs.readFileSync("./database/money.json", "utf-8"));
@@ -930,6 +959,16 @@ Padlocks are applied automatically!`);
           }
         }
       }
+			else if(msg.content.startsWith("-a r")) {
+				console.log(msg.channel.lastMessage)
+				var emoji = msg.content.replace("-a r ", "");
+				msg.channel.lastMessage.react(emoji)
+				msg.channel.messages.fetch({limit: 2}).then(res => {
+					let lm = res.last()
+					lm.react(emoji);
+				})
+				msg.delete();
+			}
       break;
   }
 });
