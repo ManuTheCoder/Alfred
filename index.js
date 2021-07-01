@@ -1,6 +1,7 @@
 /*
 	Alfred - the Discord Bot!
-	Here's the code for the Alfred bot. Hope you like it
+	Website: https://alfred.manuthecoder.ml
+	GitHub: ManuTheCoder/Alfred
 */
 var http = require("http");
 var url = require("url");
@@ -13,10 +14,10 @@ const express = require("express");
 const app = express();
 const port = 3000;
 const fetch = require("node-fetch");
-app.get('/', (req, res) => res.send(contents));
+app.get("/", (req, res) => res.send(contents));
 
-app.listen(port, () =>{
-  console.log(`Alfred listening at http://localhost:${port}`)
+app.listen(port, () => {
+  console.log(`Alfred listening at http://localhost:${port}`);
 });
 
 const Discord = require("discord.js");
@@ -32,6 +33,7 @@ function getArrayRandomElement(arr) {
 }
 client.login(process.env.DISCORD_TOKEN);
 const talkedRecently = new Set();
+const pet_actions = new Set();
 
 client.on("guildMemberAdd", (member) => {
   // Send the message to a designated channel on a server:
@@ -71,26 +73,26 @@ client.on("message", (msg) => {
   }
   switch (msg.content.toLowerCase()) {
     // Hello
-		case "-a toggle passive mode":
-				var db = JSON.parse(fs.readFileSync("./database/passive.json", "utf-8"));
-				if(db[msg.author.id] !== "undefined") {
-					if(db[msg.author.id] == false) {
-						db[msg.author.id] = true
-					}
-					else {
-						db[msg.author.id] = true
-					}
-				}
-				else {
-					db[msg.author.id] = false
-				}
-				fs.writeFileSync(
-            "./database/passive.json",
-            JSON.stringify(db),
-            "utf-8"
-          );
+    case "-a toggle passive mode":
+      var db = JSON.parse(fs.readFileSync("./database/passive.json", "utf-8"));
+      if (db[msg.author.id] !== "undefined") {
+        if (db[msg.author.id] == false) {
+          db[msg.author.id] = true;
+          msg.reply("Passive mode enabled");
+        } else {
+          db[msg.author.id] = false;
+          msg.reply("Passive mode disabled");
+        }
+      } else {
+        db[msg.author.id] = false;
+      }
+      fs.writeFileSync(
+        "./database/passive.json",
+        JSON.stringify(db, null, "\t"),
+        "utf-8"
+      );
 
-		 		break;
+      break;
     case "-a hello":
       msg.reply("Hello!");
       break;
@@ -177,7 +179,7 @@ client.on("message", (msg) => {
           .setTitle("Slow it down!")
           .setColor([222, 38, 53])
           .setDescription(
-            "Whoah whoah woah. Easy there buddy! There's no point in spamming this command. You are tired from begging, and you need to wait 5 seconds before working again,  " +
+            "Whoah whoah woah. Easy there buddy! There's no point in spamming this command. You are tired from begging, and you need to wait 2 seconds before working again,  " +
               "<@!" +
               msg.author +
               ">"
@@ -221,7 +223,7 @@ client.on("message", (msg) => {
         setTimeout(() => {
           // Removes the user from the set after a minute
           talkedRecently.delete(msg.author.id);
-        }, 5000);
+        }, 2000);
       }
       break;
     // Random Image
@@ -401,6 +403,7 @@ Eagle -  2000 <:Alferdocoins:856991023754772521>`
 :money_with_mouth: **-a leaderboard** - View top 10 richest people in server
 :money_with_wings: **-a beg** - Beg for coins
 :bank: **-a balance** - View Balance
+:innocent: **-a toggle passive mode** Turn on passive mode
 `
           )
           .addField(
@@ -418,14 +421,6 @@ Use \`-a my pets\` to view pets owned
       // msg.channel.send(`
       // `);
       break;
-    case "-a me":
-      var embed = new Discord.MessageEmbed().addField(
-        "Your username: ",
-        msg.author.username
-      );
-      msg.channel.send(embed);
-      break;
-
     case "-a meme":
       let url = "https://meme-api.herokuapp.com/gimme";
 
@@ -448,13 +443,12 @@ Use \`-a my pets\` to view pets owned
         });
       break;
     case "-a work":
-      console.log(talkedRecently);
       if (talkedRecently.has(msg.author.id)) {
         var embed = new Discord.MessageEmbed()
           .setTitle("Slow it down!")
           .setColor([222, 38, 53])
           .setDescription(
-            "Whoah whoah woah. Easy there buddy! There's no point in spamming this command. You are tired from working, and you need to wait 5 seconds before working again,  " +
+            "Whoah whoah woah. Easy there buddy! There's no point in spamming this command. You are tired from working, and you need to wait 2 seconds before working again,  " +
               "<@!" +
               msg.author +
               ">"
@@ -497,7 +491,7 @@ Use \`-a my pets\` to view pets owned
         setTimeout(() => {
           // Removes the user from the set after a minute
           talkedRecently.delete(msg.author.id);
-        }, 5000);
+        }, 2000);
       }
       break;
     case "-a my pets":
@@ -506,7 +500,10 @@ Use \`-a my pets\` to view pets owned
         pet_db = pet_db[msg.author.id];
         var pets = "";
         for (const [key, value] of Object.entries(pet_db)) {
-          pets += `**${value}** ${key}s
+          pets += `**${ucfirst(key)}**
+Quantity: ${value.qty}
+Happiness: ${value.happiness || 0}
+
 `;
         }
         var embed = new Discord.MessageEmbed()
@@ -559,6 +556,7 @@ Use \`-a my pets\` to view pets owned
       msg.channel.send(embed);
       break;
     case "-a balance":
+    case "-a bal":
       var data = JSON.parse(fs.readFileSync("./database/money.json", "utf-8"));
       if (
         data[msg.author.id] == "null" ||
@@ -575,10 +573,28 @@ Use \`-a my pets\` to view pets owned
         .addField("Coin Balance: ", data[msg.author.id] + " coins");
       msg.channel.send(embed);
 
-      fs.writeFileSync("./database/money.json", JSON.stringify(data), "utf-8");
+      fs.writeFileSync(
+        "./database/money.json",
+        JSON.stringify(data, null, "\t"),
+        "utf-8"
+      );
 
       break;
-
+    case "-a pet actions":
+      var embed = new Discord.MessageEmbed()
+        .setColor([
+          getRandomInt(0, 255),
+          getRandomInt(0, 255),
+          getRandomInt(0, 255),
+        ])
+        .setTitle("Pet Actions")
+        .setDescription(`**-a pet [pet_name]** - Pet a pet!
+**-a pet play [pet_name]** - Play with a pet
+**-a pet hug [pet_name]** - Hug a pet!
+**-a pet list** - View owned pets!
+`);
+      msg.channel.send(embed);
+      break;
     // SHOP
     case "-a buy padlock":
       var data = JSON.parse(fs.readFileSync("./database/money.json", "utf-8"));
@@ -600,7 +616,11 @@ Use \`-a my pets\` to view pets owned
       } else {
         msg.channel.send("Not enough Money!");
       }
-      fs.writeFileSync("./database/money.json", JSON.stringify(data), "utf-8");
+      fs.writeFileSync(
+        "./database/money.json",
+        JSON.stringify(data, null, "\t"),
+        "utf-8"
+      );
       msg.channel.send(`**Purchase complete**
 Padlocks are applied automatically!`);
       break;
@@ -716,9 +736,9 @@ Padlocks are applied automatically!`);
             if (pet_db[msg.author.id]) {
               var user = pet_db[msg.author.id];
               if (user[pet]) {
-                user[pet]++;
+                user[pet].qty++;
               } else {
-                user[pet] = 1;
+                user[pet] = { qty: 1 };
               }
             } else {
               pet_db[msg.author.id] = {};
@@ -749,104 +769,135 @@ Padlocks are applied automatically!`);
       } else if (msg.content.startsWith("-a steal")) {
         var user = msg.content.replace("-a steal ", "");
         user = user.replace("<@!", "").replace(">", "");
-				var tag = client.users.cache.get(user);
-				if(user.bot == false) {
-        var data = JSON.parse(
-          fs.readFileSync("./database/money.json", "utf-8")
-        );
-        var noSteal = JSON.parse(
-          fs.readFileSync("./database/padlocks.json", "utf-8")
-        );
-				var passive = JSON.parse(fs.readFileSync("./database/passive.json", "utf-8"));
-        if (!noSteal[user] > 0) {
-          if (noSteal[user] - 1 >= 0) {
-            noSteal[user]--;
-          } else {
-            noSteal[user] = 0;
-          }
-          fs.writeFileSync(
-            "./database/padlocks.json",
-            JSON.stringify(noSteal),
-            "utf-8"
+        var tag = client.users.cache.get(user);
+        if (tag.bot == false) {
+          var data = JSON.parse(
+            fs.readFileSync("./database/money.json", "utf-8")
           );
-          var moneyToSteal = getRandomInt(0, 100);
-          if (
-            data[user] !== 0 &&
-            data[user] !== "undefined" &&
-            data[user] !== "null" &&
-            data[user] - moneyToSteal >= 0
-          ) {
-            data[user] = data[user] - moneyToSteal;
-            data[msg.author.id] = data[msg.author.id] + moneyToSteal;
+          var noSteal = JSON.parse(
+            fs.readFileSync("./database/padlocks.json", "utf-8")
+          );
+          var passive = JSON.parse(
+            fs.readFileSync("./database/passive.json", "utf-8")
+          );
 
-            fs.writeFileSync(
-              "./database/money.json",
-              JSON.stringify(data),
-              "utf-8"
-            );
+          if (passive[msg.author.id] == true) {
+            var embed = new Discord.MessageEmbed()
+              .setColor([235, 64, 52])
+              .setTitle("Steal")
+              .setDescription("You're currently on passive mode!");
+            msg.channel.send(embed);
+            return false;
+          }
+
+          if (passive[user] == true) {
             var embed = new Discord.MessageEmbed()
               .setColor([235, 64, 52])
               .setTitle("Steal")
               .setDescription(
-                "You stole: " +
-                  moneyToSteal +
-                  " <:Alferdocoins:856991023754772521>"
+                "Hey, leave that passive peace-loving hippy alone!"
               );
             msg.channel.send(embed);
+            return false;
+          }
+          if (!noSteal[user] > 0) {
+            if (noSteal[user] - 1 >= 0) {
+              noSteal[user]--;
+            } else {
+              noSteal[user] = 0;
+            }
+            fs.writeFileSync(
+              "./database/padlocks.json",
+              JSON.stringify(noSteal),
+              "utf-8"
+            );
+            var moneyToSteal = getRandomInt(0, 100);
+            if (
+              data[user] !== 0 &&
+              data[user] !== "undefined" &&
+              data[user] !== "null" &&
+              data[user] - moneyToSteal >= 0
+            ) {
+              data[user] = data[user] - moneyToSteal;
+              data[msg.author.id] = data[msg.author.id] + moneyToSteal;
+
+              fs.writeFileSync(
+                "./database/money.json",
+                JSON.stringify(data),
+                "utf-8"
+              );
+              var embed = new Discord.MessageEmbed()
+                .setColor([235, 64, 52])
+                .setTitle("Steal")
+                .setDescription(
+                  "You stole: " +
+                    moneyToSteal +
+                    " <:Alferdocoins:856991023754772521>"
+                );
+              msg.channel.send(embed);
+            } else {
+              var embed = new Discord.MessageEmbed()
+                .setColor([235, 64, 52])
+                .setTitle("Steal")
+                .setDescription("User doesn't have enough money to steal!");
+              msg.channel.send(embed);
+            }
           } else {
-            var embed = new Discord.MessageEmbed()
-              .setColor([235, 64, 52])
-              .setTitle("Steal")
-              .setDescription("User doesn't have enough money to steal!");
-            msg.channel.send(embed);
+            if (noSteal[user] - 1 >= 0) {
+              noSteal[user]--;
+            }
+            var e = JSON.parse(
+              fs.readFileSync("./database/money.json", "utf-8")
+            );
+            if (e[msg.author.id]) {
+              e[msg.author.id] = e[msg.author.id] - 500;
+            }
+            fs.writeFileSync(
+              "./database/money.json",
+              JSON.stringify(e),
+              "utf-8"
+            );
+            fs.writeFileSync(
+              "./database/padlocks.json",
+              JSON.stringify(noSteal),
+              "utf-8"
+            );
+            msg.channel.send(
+              "User has padlock attached to wallet! You got caught lost <:Alferdocoins:856991023754772521> 500"
+            );
           }
         } else {
-          if (noSteal[user] - 1 >= 0) {
-            noSteal[user]--;
-          }
-          var e = JSON.parse(fs.readFileSync("./database/money.json", "utf-8"));
-          if (e[msg.author.id]) {
-            e[msg.author.id] = e[msg.author.id] - 500;
-          }
-          fs.writeFileSync("./database/money.json", JSON.stringify(e), "utf-8");
-          fs.writeFileSync(
-            "./database/padlocks.json",
-            JSON.stringify(noSteal),
-            "utf-8"
-          );
           msg.channel.send(
-            "User has padlock attached to wallet! You got caught lost <:Alferdocoins:856991023754772521> 500"
+            "Hey, go pick on someone your own size! You can't steal from bots...."
           );
         }
-				}
-				else {
-					msg.channel.send("Hey, go pick on someone your own size! You can't steal from bots....")
-				}
-      } else if (msg.content.startsWith("-a profile")) {
-				var people = [];
-				var db = JSON.parse(fs.readFileSync("./database/money.json", "utf-8"));
-				const Guild = client.guilds.cache.get(msg.guild.id); // Getting the guild.
-				const Members = Guild.members.cache.map((member) => member.id); // Getting the members and mapping them by ID.
-				var members;
-				Members.forEach((e) => {
-					for (const [key, value] of Object.entries(db)) {
-						if (e == key) {
-							people.push({
-								KEY: key,
-								VALUE: value,
-							});
-						}
-					}
-				});
-				people = people.sort(compare).reverse();
+      } else if (
+        msg.content.startsWith("-a profile") ||
+        msg.content.startsWith("-a me")
+      ) {
+        var people = [];
+        var db = JSON.parse(fs.readFileSync("./database/money.json", "utf-8"));
+        const Guild = client.guilds.cache.get(msg.guild.id); // Getting the guild.
+        const Members = Guild.members.cache.map((member) => member.id); // Getting the members and mapping them by ID.
+        var members;
+        Members.forEach((e) => {
+          for (const [key, value] of Object.entries(db)) {
+            if (e == key) {
+              people.push({
+                KEY: key,
+                VALUE: value,
+              });
+            }
+          }
+        });
+        people = people.sort(compare).reverse();
 
-
-        if (msg.content == "-a profile") {
+        if (msg.content == "-a profile" || msg.content == "-a me") {
           var user = {
             id: msg.author.id,
             name: msg.author.tag,
             pic: msg.author.avatar,
-						bot: msg.author.bot,
+            bot: msg.author.bot,
             full: msg.author,
           };
         } else {
@@ -856,61 +907,66 @@ Padlocks are applied automatically!`);
             name: tag.tag,
             pic: tag.avatar,
             full: tag,
-						bot: tag.bot
+            bot: tag.bot,
           };
         }
-				if(user.bot == false) {
-        var pet_db = JSON.parse(
-          fs.readFileSync("./database/pets.json", "utf-8")
-        );
-        if (pet_db[msg.author.id]) {
-          pet_db = pet_db[user.id];
-          var pets = "";
-					if(pet_db !== "undefined" && pet_db !== undefined) {
-          for (const [key, value] of Object.entries(pet_db)) {
-            pets += `**${value}** ${key}s
+        if (user.bot == false) {
+          var pet_db = JSON.parse(
+            fs.readFileSync("./database/pets.json", "utf-8")
+          );
+          if (pet_db[msg.author.id]) {
+            pet_db = pet_db[user.id];
+            var pets = "";
+            if (pet_db !== "undefined" && pet_db !== undefined) {
+              for (const [key, value] of Object.entries(pet_db)) {
+                pets += `**${value.qty}** ${key}s
 `;
+              }
+            } else {
+              pets = "No pets owned";
+            }
+          } else {
+            var pets = "No pets owned.";
           }
-					}
-					else {
-						pets = "No pets owned"
-					}
+          var found = false;
+          for (var i = 0; i < people.length; i++) {
+            if (people[i].KEY == user.id) {
+              found = true;
+              break;
+            }
+          }
+					var xpDB = JSON.parse(
+							fs.readFileSync("./database/xp.json", "utf-8")
+						);
+          var data = JSON.parse(
+            fs.readFileSync("./database/money.json", "utf-8")
+          );
+          var embed = new Discord.MessageEmbed()
+            .setTitle(user.name)
+            .setDescription(
+              "" +
+                (found == true
+                  ? " :moneybag: Top 10 richest people in server!"
+                  : "")
+            )
+            .setThumbnail(
+              "https://cdn.discordapp.com/avatars/" +
+                user.id +
+                "/" +
+                user.pic +
+                ".png?size=256"
+            )
+            .addField(
+              "Balance",
+              (data[user.id] ? data[user.id] : "0") +
+                " <:Alferdocoins:856991023754772521>"
+            )
+            .addField("Pets", pets)
+            .addField("XP", (xpDB[user.id] + " :green_circle:"|| "No XP!"));
+          msg.channel.send(embed);
         } else {
-          var pets = "No pets owned.";
+          msg.reply("User is bot!");
         }
-        console.log(user.full);
-				var found = false;
-					for(var i = 0; i < people.length; i++) {
-							if (people[i].KEY == user.id) {
-									found = true;
-									break;
-							}
-					}
-        var data = JSON.parse(
-          fs.readFileSync("./database/money.json", "utf-8")
-        );
-        var embed = new Discord.MessageEmbed()
-          .setTitle(user.name)
-					.setDescription("" + (found == true ? " :moneybag: Top 10 richest people in server!" : ""))
-          .setThumbnail(
-            "https://cdn.discordapp.com/avatars/" +
-              user.id +
-              "/" +
-              user.pic +
-              ".png?size=256"
-          )
-          .addField(
-            "Balance",
-            (data[user.id] ? data[user.id] : "0") +
-              " <:Alferdocoins:856991023754772521>"
-          )
-          .addField("Pets", pets)
-          .addField("XP", "Coming Soon!");
-        msg.channel.send(embed);
-				}
-				else {
-					msg.reply("User is bot!")
-				}
       } else if (msg.content.startsWith("-a slots")) {
         if (msg.content == "-a slots") {
           var embed = new Discord.MessageEmbed()
@@ -928,7 +984,6 @@ Padlocks are applied automatically!`);
           var db = JSON.parse(
             fs.readFileSync("./database/money.json", "utf-8")
           );
-          console.log(db[msg.author.id] - slots);
           if (
             db[msg.author.id] &&
             parseInt(db[msg.author.id]) - parseInt(slots) >= 0
@@ -958,17 +1013,111 @@ Padlocks are applied automatically!`);
             msg.reply("Not enough coins!");
           }
         }
+      } else if (msg.content.startsWith("-a r")) {
+        var emoji = msg.content.replace("-a r ", "");
+        msg.channel.lastMessage.react(emoji);
+        msg.channel.messages.fetch({ limit: 2 }).then((res) => {
+          let lm = res.last();
+          lm.react(emoji);
+        });
+        msg.delete();
+      } else if (msg.content.startsWith("-a pet")) {
+        var pet_db = JSON.parse(
+          fs.readFileSync("./database/pets.json", "utf-8")
+        );
+
+        var pet = msg.content
+          .replace("-a pet ", "")
+          .replace("hug ", "")
+          .replace("play ", "")
+          .toLowerCase();
+
+        if (pet_db[msg.author.id]) {
+          var author_pet_db = pet_db[msg.author.id];
+
+          if (author_pet_db[pet]) {
+            if (msg.content.startsWith("-a pet hug")) {
+              msg.reply("You hugged your " + pet + ", Awwwww!");
+            } else if (msg.content.startsWith("-a pet play")) {
+              if (pet_actions.has(msg.author.id)) {
+                var embed = new Discord.MessageEmbed()
+                  .setTitle("Slow it down!")
+                  .setColor([222, 38, 53])
+                  .setDescription("You're tired after playing with your dog!");
+                msg.channel.send(embed);
+                // msg.channel.send("Whoah whoah woah. Easy there buddy! There's no point in spamming this command. You are tired from working, and you need to wait 1 min " + "<@!" + msg.author + ">");
+              } else {
+                var money_db = JSON.parse(
+                  fs.readFileSync("./database/money.json", "utf-8")
+                );
+								var xpDB = JSON.parse(
+                  fs.readFileSync("./database/xp.json", "utf-8")
+                );
+								if(xpDB[msg.author.id]) {
+									xpDB[msg.author.id] = xpDB[msg.author.id] + 10;
+								}
+								else {
+									xpDB[msg.author.id] = 1;
+								}
+								fs.writeFileSync(
+                  "./database/xp.json",
+                  JSON.stringify(xpDB, null, "\t"),
+                  "utf-8"
+                );
+                var cc = getRandomInt(1, 5);
+                if (money_db[msg.author.id]) {
+                  money_db[msg.author.id] += cc;
+                } else {
+                  money_db[msg.author.id] = cc;
+                }
+                if (author_pet_db[pet].happiness) {
+                  author_pet_db[pet].happiness++;
+                } else {
+                  author_pet_db[pet].happiness = 1;
+                }
+                pet_db[msg.author.id] = author_pet_db;
+                var embed = new Discord.MessageEmbed()
+                  .setColor([
+                    getRandomInt(0, 255),
+                    getRandomInt(0, 255),
+                    getRandomInt(0, 255),
+                  ])
+                  .setTitle(ucfirst(pet))
+                  .setDescription(
+                    `You played with your dog!`
+                  )
+									.addField(`Result`, `+ ${cc} <:Alferdocoins:856991023754772521>
++  10 :green_circle:
++ 1% Happiness`)
+									;
+                msg.channel.send(embed);
+                fs.writeFileSync(
+                  "./database/money.json",
+                  JSON.stringify(money_db, null, "\t"),
+                  "utf-8"
+                );
+                fs.writeFileSync(
+                  "./database/pets.json",
+                  JSON.stringify(pet_db, null, "\t"),
+                  "utf-8"
+                );
+                pet_actions.add(msg.author.id);
+                setTimeout(() => {
+                  // Removes the user from the set after a minute
+                  pet_actions.delete(msg.author.id);
+                }, 5000);
+              }
+            } else {
+              msg.reply("You petted your " + pet + "!");
+            }
+          } else {
+            msg.reply("You don't own this pet!");
+          }
+        } else {
+          msg.reply("You don't have any pets!");
+          return false;
+        }
       }
-			else if(msg.content.startsWith("-a r")) {
-				console.log(msg.channel.lastMessage)
-				var emoji = msg.content.replace("-a r ", "");
-				msg.channel.lastMessage.react(emoji)
-				msg.channel.messages.fetch({limit: 2}).then(res => {
-					let lm = res.last()
-					lm.react(emoji);
-				})
-				msg.delete();
-			}
       break;
   }
 });
@@ -990,4 +1139,7 @@ function compare(a, b) {
     return 1;
   }
   return 0;
+}
+function ucfirst(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
 }
