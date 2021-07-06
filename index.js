@@ -12,6 +12,7 @@ var contents = fs.readFileSync("index.html").toString();
 
 const express = require("express");
 const app = express();
+const { MessageAttachment } = require('discord.js');
 const port = 3000;
 const fetch = require("node-fetch");
 app.get("/", (req, res) => res.send(contents));
@@ -32,9 +33,13 @@ function getArrayRandomElement(arr) {
   }
 }
 client.login(process.env.DISCORD_TOKEN);
+
+// Cooldowns
 const talkedRecently = new Set();
 const pet_actions = new Set();
+const passive_mode_cooldown = new Set();
 
+// Server Add
 client.on("guildMemberAdd", (member) => {
   // Send the message to a designated channel on a server:
   const channel = member.guild.channels.cache.find(
@@ -49,49 +54,44 @@ client.on("guildMemberAdd", (member) => {
 client.on("message", (msg) => {
   // console.log(msg)
   console.log(msg.content.toLowerCase());
-  if (!msg.channel.nsfw || msg.author.id == "") {
-    // yeah blacklist bad words
-    var profanities = [
-      "ass",
-      "fuck",
-      "bitch",
-      "shit",
-      "bastard",
-      "asshole",
-      "dick",
-    ];
-    var regex = new RegExp(`(\\b|\\d)(${profanities.join("|")})(\\b|\\d)`, "i");
-    if (regex.test(msg.content.toLowerCase())) {
-      // msg.channel.send("No profanity!")
-      var embed = new Discord.MessageEmbed()
-        .setTitle("Deleted!")
-        .setColor([252, 25, 67])
-        .setDescription("No profanity!");
-      msg.channel.send(embed);
-      msg.delete();
-    }
-  }
   switch (msg.content.toLowerCase()) {
     // Hello
     case "-a toggle passive mode":
-      var db = JSON.parse(fs.readFileSync("./database/passive.json", "utf-8"));
-      if (db[msg.author.id] !== "undefined") {
-        if (db[msg.author.id] == false) {
-          db[msg.author.id] = true;
-          msg.reply("Passive mode enabled");
+      if (passive_mode_cooldown.has(msg.author.id)) {
+        var embed = new Discord.MessageEmbed()
+          .setTitle("Slow it down!")
+          .setColor([222, 38, 53])
+          .setDescription(
+            "You cannot enable passive mode again in 1 hour"
+          );
+        msg.channel.send(embed);
+        // msg.channel.send("Whoah whoah woah. Easy there buddy! There's no point in spamming this command. You are tired from working, and you need to wait 1 min " + "<@!" + msg.author + ">");
+      } else {
+        var db = JSON.parse(
+          fs.readFileSync("./database/passive.json", "utf-8")
+        );
+        if (db[msg.author.id] !== "undefined") {
+          if (db[msg.author.id] == false) {
+            db[msg.author.id] = true;
+            msg.reply("Passive mode enabled");
+          } else {
+            db[msg.author.id] = false;
+            msg.reply("Passive mode disabled");
+          }
         } else {
           db[msg.author.id] = false;
-          msg.reply("Passive mode disabled");
         }
-      } else {
-        db[msg.author.id] = false;
+        fs.writeFileSync(
+          "./database/passive.json",
+          JSON.stringify(db, null, "\t"),
+          "utf-8"
+        );
+        passive_mode_cooldown.add(msg.author.id);
+        setTimeout(() => {
+          // Removes the user from the set after a minute
+          passive_mode_cooldown.delete(msg.author.id);
+        }, 3600000);
       }
-      fs.writeFileSync(
-        "./database/passive.json",
-        JSON.stringify(db, null, "\t"),
-        "utf-8"
-      );
-
       break;
     case "-a hello":
       msg.reply("Hello!");
@@ -211,7 +211,7 @@ client.on("message", (msg) => {
 
           fs.writeFileSync(
             "./database/money.json",
-            JSON.stringify(data),
+            JSON.stringify(data, null, "\t"),
             "utf-8"
           );
 
@@ -367,11 +367,13 @@ Eagle -  2000 <:Alferdocoins:856991023754772521>`
 *All Commands begin with an \`-a\`*`
           )
           .addField(
-            "Cats",
+            "Cats & Dogs",
             `
 :cat:⠀ **-a cat** - Show me a cat image
 :cat:⠀ **-a cat cute** - Show me a cat image (CUTE)
 :cat:⠀ **-a cat gif** - Show me a cat image (GIF)
+
+:dog: **-a dog** - Show me a dog!
 `
           )
           .addField(
@@ -386,11 +388,8 @@ Eagle -  2000 <:Alferdocoins:856991023754772521>`
           .addField(
             "Other Commands",
             `
-:question:⠀ **-a help OR -a cmds OR -a commands** - Ask me for help
 :laughing:⠀ **-a meme** - Show me a meme!
-:wave:⠀ **-a hello** - Say Hello to me
 :frame_photo:⠀ **-a random image** - Show random image
-:slight_smile: **-a help** - Show an embed 
 :robot: ⠀**-a credits**  - Credits for this bot
 **-a r :slight_smile: ** - (For example), react to the last message in current channel
 `
@@ -400,7 +399,7 @@ Eagle -  2000 <:Alferdocoins:856991023754772521>`
             `
 :moneybag: **-a steal @user** - Steal from a user
 :briefcase: **-a work** - Work
-:money_with_mouth: **-a leaderboard** - View top 10 richest people in server
+:money_mouth: **-a leaderboard** - View top 10 richest people in server
 :money_with_wings: **-a beg** - Beg for coins
 :bank: **-a balance** - View Balance
 :innocent: **-a toggle passive mode** Turn on passive mode
@@ -421,6 +420,25 @@ Use \`-a my pets\` to view pets owned
       // msg.channel.send(`
       // `);
       break;
+		case "-a dog":
+		let url1 = "https://dog.ceo/api/breeds/image/random";
+		let settings1 = { method: "Get" };
+		fetch(url1, settings1)
+        .then((res) => res.json())
+        .then((json) => {
+          var embed = new Discord.MessageEmbed()
+            .setTitle(json.title)
+            .setColor([
+              getRandomInt(0, 255),
+              getRandomInt(0, 255),
+              getRandomInt(0, 255),
+            ])
+            .setURL(json.message)
+            .setImage(json.message)
+						.setTitle("View Picture")
+          msg.channel.send(embed);
+        });
+		 	break;
     case "-a meme":
       let url = "https://meme-api.herokuapp.com/gimme";
 
@@ -482,7 +500,7 @@ Use \`-a my pets\` to view pets owned
 
         fs.writeFileSync(
           "./database/money.json",
-          JSON.stringify(data),
+          JSON.stringify(data, null, "\t"),
           "utf-8"
         );
 
@@ -610,7 +628,7 @@ Happiness: ${value.happiness || 0}
         }
         fs.writeFileSync(
           "./database/padlocks.json",
-          JSON.stringify(inv),
+          JSON.stringify(inv, null, "\t"),
           "utf-8"
         );
       } else {
@@ -678,7 +696,7 @@ Padlocks are applied automatically!`);
       } else if (msg.content.startsWith("-a buy")) {
         if (msg.content !== "-a buy") {
           var pet = msg.content.replace("-a buy ", "");
-          var price;
+          var price = false;
           var db = JSON.parse(
             fs.readFileSync("./database/money.json", "utf-8")
           );
@@ -725,8 +743,11 @@ Padlocks are applied automatically!`);
             case "eagle":
               price = 2000;
               break;
+            default:
+              msg.reply("Invalid pet name!");
+              return false;
+              break;
           }
-
           if (db[msg.author.id] >= price) {
             db[msg.author.id] = db[msg.author.id] - price;
             var pet_db = JSON.parse(
@@ -746,17 +767,17 @@ Padlocks are applied automatically!`);
               if (user[pet]) {
                 user[pet]++;
               } else {
-                user[pet] = 1;
+                user[pet] = { qty: 1 };
               }
             }
             fs.writeFileSync(
               "./database/pets.json",
-              JSON.stringify(pet_db),
+              JSON.stringify(pet_db, null, "\t"),
               "utf-8"
             );
             fs.writeFileSync(
               "./database/money.json",
-              JSON.stringify(db),
+              JSON.stringify(db, null, "\t"),
               "utf-8"
             );
             msg.reply("Bought pet successfully!");
@@ -808,7 +829,7 @@ Padlocks are applied automatically!`);
             }
             fs.writeFileSync(
               "./database/padlocks.json",
-              JSON.stringify(noSteal),
+              JSON.stringify(noSteal, null, "\t"),
               "utf-8"
             );
             var moneyToSteal = getRandomInt(0, 100);
@@ -823,7 +844,7 @@ Padlocks are applied automatically!`);
 
               fs.writeFileSync(
                 "./database/money.json",
-                JSON.stringify(data),
+                JSON.stringify(data, null, "\t"),
                 "utf-8"
               );
               var embed = new Discord.MessageEmbed()
@@ -854,12 +875,12 @@ Padlocks are applied automatically!`);
             }
             fs.writeFileSync(
               "./database/money.json",
-              JSON.stringify(e),
+              JSON.stringify(e, null, "\t"),
               "utf-8"
             );
             fs.writeFileSync(
               "./database/padlocks.json",
-              JSON.stringify(noSteal),
+              JSON.stringify(noSteal, null, "\t"),
               "utf-8"
             );
             msg.channel.send(
@@ -935,14 +956,17 @@ Padlocks are applied automatically!`);
               break;
             }
           }
-					var xpDB = JSON.parse(
-							fs.readFileSync("./database/xp.json", "utf-8")
-						);
+          var xpDB = JSON.parse(fs.readFileSync("./database/xp.json", "utf-8"));
           var data = JSON.parse(
             fs.readFileSync("./database/money.json", "utf-8")
           );
           var embed = new Discord.MessageEmbed()
             .setTitle(user.name)
+            .setColor([
+              getRandomInt(0, 255),
+              getRandomInt(0, 255),
+              getRandomInt(0, 255),
+            ])
             .setDescription(
               "" +
                 (found == true
@@ -962,12 +986,40 @@ Padlocks are applied automatically!`);
                 " <:Alferdocoins:856991023754772521>"
             )
             .addField("Pets", pets)
-            .addField("XP", (xpDB[user.id] + " :green_circle:"|| "No XP!"));
+            .addField("XP", xpDB[user.id] + " :green_circle:" || "No XP!");
           msg.channel.send(embed);
         } else {
           msg.reply("User is bot!");
         }
-      } else if (msg.content.startsWith("-a slots")) {
+      }
+			else if (msg.content.startsWith("-a creatememe")) {
+				if(msg.content == "-a creatememe") {
+					msg.channel.send(`Create a meme by typing: 
+\`-a creatememe TOP_TEXT | BOTTOM_TEXT | TEMPLATE_NAME\`					
+	`);
+					const attachment = new MessageAttachment('templates.txt');
+    // Send the attachment in the message channel
+    msg.channel.send(attachment);
+					return false;
+				}
+				var topText = msg.content.replace("-a creatememe", "").split("|")[0];
+				var bottomText = msg.content.replace("-a creatememe", "").split("|")[1];
+				var template = msg.content.replace("-a creatememe", "").split("|")[2].trim().replace(" ", "-") || "10-guy";
+				console.log(template)
+				if(topText && bottomText && template) {
+				var image = `https://apimeme.com/meme?meme=${encodeURIComponent(template)}&top=${encodeURIComponent(topText)}&bottom=${encodeURIComponent(bottomText)}`;
+				console.log(image)
+
+				var embed = new Discord.MessageEmbed()
+					.setColor([235, 64, 52])
+					.setImage(image);
+				msg.channel.send(embed);
+				}
+				else {
+					msg.reply("Invalid meme request!")
+				}
+			}
+			 else if (msg.content.startsWith("-a slots")) {
         if (msg.content == "-a slots") {
           var embed = new Discord.MessageEmbed()
             .setTitle(
@@ -995,7 +1047,7 @@ Padlocks are applied automatically!`);
               );
               fs.writeFileSync(
                 "./database/money.json",
-                JSON.stringify(db),
+                JSON.stringify(db, null, "\t"),
                 "utf-8"
               );
             } else {
@@ -1005,7 +1057,7 @@ Padlocks are applied automatically!`);
               );
               fs.writeFileSync(
                 "./database/money.json",
-                JSON.stringify(db),
+                JSON.stringify(db, null, "\t"),
                 "utf-8"
               );
             }
@@ -1043,23 +1095,24 @@ Padlocks are applied automatically!`);
                 var embed = new Discord.MessageEmbed()
                   .setTitle("Slow it down!")
                   .setColor([222, 38, 53])
-                  .setDescription("You're tired after playing with your dog!");
+                  .setDescription(
+                    "You're tired after playing with your " + pet + "!"
+                  );
                 msg.channel.send(embed);
                 // msg.channel.send("Whoah whoah woah. Easy there buddy! There's no point in spamming this command. You are tired from working, and you need to wait 1 min " + "<@!" + msg.author + ">");
               } else {
                 var money_db = JSON.parse(
                   fs.readFileSync("./database/money.json", "utf-8")
                 );
-								var xpDB = JSON.parse(
+                var xpDB = JSON.parse(
                   fs.readFileSync("./database/xp.json", "utf-8")
                 );
-								if(xpDB[msg.author.id]) {
-									xpDB[msg.author.id] = xpDB[msg.author.id] + 10;
-								}
-								else {
-									xpDB[msg.author.id] = 1;
-								}
-								fs.writeFileSync(
+                if (xpDB[msg.author.id]) {
+                  xpDB[msg.author.id] = xpDB[msg.author.id] + 10;
+                } else {
+                  xpDB[msg.author.id] = 1;
+                }
+                fs.writeFileSync(
                   "./database/xp.json",
                   JSON.stringify(xpDB, null, "\t"),
                   "utf-8"
@@ -1083,13 +1136,13 @@ Padlocks are applied automatically!`);
                     getRandomInt(0, 255),
                   ])
                   .setTitle(ucfirst(pet))
-                  .setDescription(
-                    `You played with your dog!`
-                  )
-									.addField(`Result`, `+ ${cc} <:Alferdocoins:856991023754772521>
+                  .setDescription(`You played with your your ${pet}!`)
+                  .addField(
+                    `Result`,
+                    `+ ${cc} <:Alferdocoins:856991023754772521>
 +  10 :green_circle:
-+ 1% Happiness`)
-									;
++ 1% Happiness`
+                  );
                 msg.channel.send(embed);
                 fs.writeFileSync(
                   "./database/money.json",
