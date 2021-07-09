@@ -2,7 +2,7 @@
 	"757736914894848010": {
 		"dog": {
 			"qty": 6,
-			"happiness": 30
+			"happiness": 31
 		},
 		"cat": {
 			"qty": 2
@@ -32,7 +32,7 @@
 	"855945581553385514": {
 		"dog": {
 			"qty": 1,
-			"happiness": 2
+			"happiness": 10
 		}
 	}
 }

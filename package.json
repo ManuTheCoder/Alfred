@@ -2,7 +2,7 @@
   "name": "alfred",
   "version": "1.0.0",
   "description": "alfred is a discord bot",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -16,6 +16,7 @@
     "express": "^4.17.1",
     "node-fetch": "^2.6.1",
     "profanities": "^3.0.0",
+    "random-animals-pictures": "^1.0.1",
     "request": "^2.88.2"
   }
 }

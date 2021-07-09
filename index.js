@@ -9,10 +9,11 @@ var url = require("url");
 var fs = require("fs");
 
 var contents = fs.readFileSync("index.html").toString();
+// const animals = require("random-animals-pictures");
 
 const express = require("express");
 const app = express();
-const { MessageAttachment } = require('discord.js');
+const { MessageAttachment } = require("discord.js");
 const port = 3000;
 const fetch = require("node-fetch");
 app.get("/", (req, res) => res.send(contents));
@@ -61,9 +62,7 @@ client.on("message", (msg) => {
         var embed = new Discord.MessageEmbed()
           .setTitle("Slow it down!")
           .setColor([222, 38, 53])
-          .setDescription(
-            "You cannot enable passive mode again in 1 hour"
-          );
+          .setDescription("You cannot enable passive mode again in 1 hour");
         msg.channel.send(embed);
         // msg.channel.send("Whoah whoah woah. Easy there buddy! There's no point in spamming this command. You are tired from working, and you need to wait 1 min " + "<@!" + msg.author + ">");
       } else {
@@ -235,23 +234,154 @@ client.on("message", (msg) => {
       )}?nocache=${encodeURI(new Date())}
 			`);
       break;
+    case "-a koala":
+      var embed = new Discord.MessageEmbed()
+        .setTitle("Please wait")
+        .setColor([222, 38, 53])
+        .setDescription("Fetching image");
+      msg.channel.send(embed).then((sent) => {
+        let id = sent.id;
+        fetch("https://some-random-api.ml/img/koala", { method: "Get" })
+          .then((res) => res.json())
+          .then((json) => {
+            sent.edit(
+              new Discord.MessageEmbed()
+                .setColor([
+                  getRandomInt(0, 255),
+                  getRandomInt(0, 255),
+                  getRandomInt(0, 255),
+                ])
+                .setURL(json.link)
+                .setImage(json.link)
+                .setTitle("View Picture")
+            );
+          });
+      });
+      break;
+    case "-a panda":
+      var embed = new Discord.MessageEmbed()
+        .setTitle("Please wait")
+        .setColor([222, 38, 53])
+        .setDescription("Fetching image");
+      msg.channel.send(embed).then((sent) => {
+        let id = sent.id;
+        var fact;
+        fetch("https://some-random-api.ml/facts/panda", { method: "Get" })
+          .then((res) => res.json())
+          .then((json) => {
+            fact = json.fact;
+            fetch("https://some-random-api.ml/img/panda", { method: "Get" })
+              .then((res) => res.json())
+              .then((json) => {
+                sent.edit(
+                  new Discord.MessageEmbed()
+                    .setColor([
+                      getRandomInt(0, 255),
+                      getRandomInt(0, 255),
+                      getRandomInt(0, 255),
+                    ])
+                    .setURL(json.link)
+                    .setImage(json.link)
+                    .setTitle("View Picture")
+                );
+              });
+          });
+      });
+      break;
+    case "-a fox":
+      var embed = new Discord.MessageEmbed()
+        .setTitle("Please wait")
+        .setColor([222, 38, 53])
+        .setDescription("Fetching image");
+      msg.channel.send(embed).then((sent) => {
+        let id = sent.id;
+        var fact;
+        fetch("https://some-random-api.ml/facts/fox", { method: "Get" })
+          .then((res) => res.json())
+          .then((json) => {
+            fact = json.fact;
+            fetch("https://some-random-api.ml/img/fox", { method: "Get" })
+              .then((res) => res.json())
+              .then((json) => {
+                sent.edit(
+                  new Discord.MessageEmbed()
+                    .setColor([
+                      getRandomInt(0, 255),
+                      getRandomInt(0, 255),
+                      getRandomInt(0, 255),
+                    ])
+                    .setURL(json.link)
+                    .setDescription("**Fun fact:** " + fact)
+                    .setImage(json.link)
+                    .setTitle("View Picture")
+                );
+              });
+          });
+      });
+      break;
+    case "-a bird":
+    case "-a birb":
+      var embed = new Discord.MessageEmbed()
+        .setTitle("Please wait")
+        .setColor([222, 38, 53])
+        .setDescription("Fetching image");
+      msg.channel.send(embed).then((sent) => {
+        let id = sent.id;
+        var fact;
+        fetch("https://some-random-api.ml/facts/birb", { method: "Get" })
+          .then((res) => res.json())
+          .then((json) => {
+            fact = json.fact;
+            fetch("https://some-random-api.ml/img/birb", { method: "Get" })
+              .then((res) => res.json())
+              .then((json) => {
+                sent.edit(
+                  new Discord.MessageEmbed()
+                    .setColor([
+                      getRandomInt(0, 255),
+                      getRandomInt(0, 255),
+                      getRandomInt(0, 255),
+                    ])
+                    .setURL(json.link)
+                    .setDescription("**Fun fact:** " + fact)
+                    .setImage(json.link)
+                    .setTitle("View Picture")
+                );
+              });
+          });
+      });
+      break;
     // Cat Image!
     case "-a cat":
-      msg.channel.send(`
-			https://cataas.com/cat/says/%20?nocache=${encodeURI(new Date())}
-			`);
-      break;
-    // Gif Cat
-    case "-a cat gif":
-      msg.channel.send(`
-			https://cataas.com/cat/gif?nocache=${encodeURI(new Date())}
-			`);
-      break;
-    // Cute cat
-    case "-a cat cute":
-      msg.channel.send(`
-			https://cataas.com/cat/cute?nocache=${encodeURI(new Date())}
-			`);
+      var embed = new Discord.MessageEmbed()
+        .setTitle("Please wait")
+        .setColor([222, 38, 53])
+        .setDescription("Fetching image");
+      msg.channel.send(embed).then((sent) => {
+        let id = sent.id;
+        var fact;
+        fetch("https://some-random-api.ml/facts/cat", { method: "Get" })
+          .then((res) => res.json())
+          .then((json) => {
+            fact = json.fact;
+            fetch("https://some-random-api.ml/img/cat", { method: "Get" })
+              .then((res) => res.json())
+              .then((json) => {
+                sent.edit(
+                  new Discord.MessageEmbed()
+                    .setColor([
+                      getRandomInt(0, 255),
+                      getRandomInt(0, 255),
+                      getRandomInt(0, 255),
+                    ])
+                    .setURL(json.link)
+                    .setDescription("**Fun fact:** " + fact)
+                    .setImage(json.link)
+                    .setTitle("View Picture")
+                );
+              });
+          });
+      });
       break;
     // Count to 10
     case "-a count":
@@ -367,42 +497,43 @@ Eagle -  2000 <:Alferdocoins:856991023754772521>`
 *All Commands begin with an \`-a\`*`
           )
           .addField(
-            "Cats & Dogs",
+            "Random Animal Pics",
             `
-:cat:⠀ **-a cat** - Show me a cat image
-:cat:⠀ **-a cat cute** - Show me a cat image (CUTE)
-:cat:⠀ **-a cat gif** - Show me a cat image (GIF)
-
-:dog: **-a dog** - Show me a dog!
+:cat: \`-a cat\` - Show me a cat
+:dog: \`-a dog\` - Show me a dog
+:parrot: \`-a bird\` - Show me a bird
+:fox: \`-a fox\` - Show me a fox
+:panda_face: \`-a panda\` - Show me a panda
+:koala: \`-a koala\` - Show me a koala
 `
           )
           .addField(
             "Random",
             `
-:person_pouting: **-a profile** - View profile
-:robot: ⠀**-a roll dice** - Roll a dice
-:robot: ⠀**-a rpc [rock, paper, scissors]** - Rock Paper Scissors (Choose one)
-<:Alferdocoins:856991023754772521> ⠀**-a flip coin OR -a coinflip**- Flip a coin
+:person_pouting: \`-a profile\` - View profile
+:robot: \`-a roll dice\` - Roll a dice
+:robot: \`-a rpc [rock, paper, scissors]\` - Rock Paper Scissors (Choose one)
+<:Alferdocoins:856991023754772521> \`-a flip coin OR -a coinflip\`- Flip a coin
 `
           )
           .addField(
             "Other Commands",
             `
-:laughing:⠀ **-a meme** - Show me a meme!
-:frame_photo:⠀ **-a random image** - Show random image
-:robot: ⠀**-a credits**  - Credits for this bot
-**-a r :slight_smile: ** - (For example), react to the last message in current channel
+:laughing: \`-a meme\` - Show me a meme!
+:frame_photo: \`-a random image\` - Show random image
+:robot: \`-a credits\`  - Credits for this bot
+:slight_smile: \`-a r :slight_smile: \` - (For example), react to the last message in current channel
 `
           )
           .addField(
             "Money",
             `
-:moneybag: **-a steal @user** - Steal from a user
-:briefcase: **-a work** - Work
-:money_mouth: **-a leaderboard** - View top 10 richest people in server
-:money_with_wings: **-a beg** - Beg for coins
-:bank: **-a balance** - View Balance
-:innocent: **-a toggle passive mode** Turn on passive mode
+:moneybag: \`-a steal @user\` - Steal from a user
+:briefcase: \`-a work\` - Work
+:money_mouth: \`-a leaderboard\` - View top 10 richest people in server
+:money_with_wings: \`-a beg\` - Beg for coins
+:bank: \`-a balance\` - View Balance
+:innocent: \`-a toggle passive mode\` Turn on passive mode
 `
           )
           .addField(
@@ -417,28 +548,38 @@ Use \`-a my pets\` to view pets owned
         msg.channel.send(embed);
       }
       createNewEmbed();
-      // msg.channel.send(`
-      // `);
       break;
-		case "-a dog":
-		let url1 = "https://dog.ceo/api/breeds/image/random";
-		let settings1 = { method: "Get" };
-		fetch(url1, settings1)
-        .then((res) => res.json())
-        .then((json) => {
-          var embed = new Discord.MessageEmbed()
-            .setTitle(json.title)
-            .setColor([
-              getRandomInt(0, 255),
-              getRandomInt(0, 255),
-              getRandomInt(0, 255),
-            ])
-            .setURL(json.message)
-            .setImage(json.message)
-						.setTitle("View Picture")
-          msg.channel.send(embed);
-        });
-		 	break;
+    case "-a dog":
+      var embed = new Discord.MessageEmbed()
+        .setTitle("Please wait")
+        .setColor([222, 38, 53])
+        .setDescription("Fetching image");
+      msg.channel.send(embed).then((sent) => {
+        let id = sent.id;
+        var fact;
+        fetch("https://some-random-api.ml/facts/dog", { method: "Get" })
+          .then((res) => res.json())
+          .then((json) => {
+            fact = json.fact;
+            fetch("https://some-random-api.ml/img/dog", { method: "Get" })
+              .then((res) => res.json())
+              .then((json) => {
+                sent.edit(
+                  new Discord.MessageEmbed()
+                    .setColor([
+                      getRandomInt(0, 255),
+                      getRandomInt(0, 255),
+                      getRandomInt(0, 255),
+                    ])
+                    .setURL(json.link)
+                    .setDescription("**Fun fact:** " + fact)
+                    .setImage(json.link)
+                    .setTitle("View Picture")
+                );
+              });
+          });
+      });
+      break;
     case "-a meme":
       let url = "https://meme-api.herokuapp.com/gimme";
 
@@ -991,39 +1132,47 @@ Padlocks are applied automatically!`);
         } else {
           msg.reply("User is bot!");
         }
-      }
-			else if (msg.content.startsWith("-a creatememe")) {
-				if(msg.content == "-a creatememe") {
-					msg.channel.send(`Create a meme by typing: 
+      } else if (msg.content.startsWith("-a creatememe")) {
+        if (msg.content == "-a creatememe") {
+          msg.channel.send(`Create a meme by typing: 
 \`-a creatememe TOP_TEXT | BOTTOM_TEXT | TEMPLATE_NAME\`					
 	`);
-					const attachment = new MessageAttachment('templates.txt');
-    // Send the attachment in the message channel
-    msg.channel.send(attachment);
-					return false;
-				}
-				var topText = msg.content.replace("-a creatememe", "").split("|")[0];
-				var bottomText = msg.content.replace("-a creatememe", "").split("|")[1];
-				var template = msg.content.replace("-a creatememe", "").split("|")[2].trim().replace(" ", "-") || "10-guy";
-				console.log(template)
-				if(topText && bottomText && template) {
-				var image = `https://apimeme.com/meme?meme=${encodeURIComponent(template)}&top=${encodeURIComponent(topText)}&bottom=${encodeURIComponent(bottomText)}`;
-				console.log(image)
+          const attachment = new MessageAttachment("templates.txt");
+          // Send the attachment in the message channel
+          msg.channel.send(attachment);
+          return false;
+        }
+        var topText =
+          msg.content.replace("-a creatememe", "").split("|")[0] || "Undefined";
+        var bottomText =
+          msg.content.replace("-a creatememe", "").split("|")[1] || "Undefined";
+        var template =
+          msg.content
+            .replace("-a creatememe", "")
+            .split("|")[2]
+            .trim()
+            .replace(" ", "-") || "10-guy";
+        console.log(template);
+        if (topText && bottomText && template) {
+          var image = `https://apimeme.com/meme?meme=${encodeURIComponent(
+            template
+          )}&top=${encodeURIComponent(topText)}&bottom=${encodeURIComponent(
+            bottomText
+          )}`;
+          console.log(image);
 
-				var embed = new Discord.MessageEmbed()
-					.setColor([235, 64, 52])
-					.setImage(image);
-				msg.channel.send(embed);
-				}
-				else {
-					msg.reply("Invalid meme request!")
-				}
-			}
-			 else if (msg.content.startsWith("-a slots")) {
+          var embed = new Discord.MessageEmbed()
+            .setColor([235, 64, 52])
+            .setImage(image);
+          msg.channel.send(embed);
+        } else {
+          msg.reply("Invalid meme request!");
+        }
+      } else if (msg.content.startsWith("-a slots")) {
         if (msg.content == "-a slots") {
           var embed = new Discord.MessageEmbed()
             .setTitle(
-              "<:Alferdocoins:856991023754772521> Slots <:Alferdocoins:856991023754772521>"
+              "Slots"
             )
             .setColor([235, 229, 73])
             .setDescription(
@@ -1042,9 +1191,11 @@ Padlocks are applied automatically!`);
           ) {
             if (s == "Heads") {
               db[msg.author.id] = db[msg.author.id] + slots;
-              msg.reply(
-                "You won <:Alferdocoins:856991023754772521>⠀" + slots + "!"
-              );
+							var embed = new Discord.MessageEmbed()
+								.setTitle("Slots")
+								.setColor([235, 229, 73])
+								.setDescription("You won <:Alferdocoins:856991023754772521>⠀" + slots + "!");
+								msg.channel.send(embed);
               fs.writeFileSync(
                 "./database/money.json",
                 JSON.stringify(db, null, "\t"),
@@ -1052,9 +1203,11 @@ Padlocks are applied automatically!`);
               );
             } else {
               db[msg.author.id] = db[msg.author.id] - slots;
-              msg.reply(
-                "You lost <:Alferdocoins:856991023754772521>⠀" + slots + "!"
-              );
+              var embed = new Discord.MessageEmbed()
+								.setTitle("Slots")
+								.setColor([235, 229, 73])
+								.setDescription("You lost <:Alferdocoins:856991023754772521>⠀" + slots + "!");
+								msg.channel.send(embed);
               fs.writeFileSync(
                 "./database/money.json",
                 JSON.stringify(db, null, "\t"),
