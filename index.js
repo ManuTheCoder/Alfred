@@ -41,15 +41,8 @@ const pet_actions = new Set();
 const passive_mode_cooldown = new Set();
 
 // Server Add
-client.on("guildMemberAdd", (member) => {
-  // Send the message to a designated channel on a server:
-  const channel = member.guild.channels.cache.find(
-    (ch) => ch.name === "member-log"
-  );
-  // Do nothing if the channel wasn't found on this server
-  if (!channel) return;
-  // Send the message, mentioning the member
-  channel.send(`Welcome to the server, ${member}`);
+client.on('guildMemberAdd', member => {
+   member.send(`Welcome to the server! To get a list of commands, type  \`-a help\`.`);
 });
 
 client.on("message", (msg) => {
@@ -249,7 +242,7 @@ client.on("message", (msg) => {
                 .setColor([
                   getRandomInt(0, 255),
                   getRandomInt(0, 255),
-                  getRandomInt(0, 255),
+                  getRandomInt(0, 255)
                 ])
                 .setURL(json.link)
                 .setImage(json.link)
@@ -278,7 +271,7 @@ client.on("message", (msg) => {
                     .setColor([
                       getRandomInt(0, 255),
                       getRandomInt(0, 255),
-                      getRandomInt(0, 255),
+                      getRandomInt(0, 255)
                     ])
                     .setURL(json.link)
                     .setImage(json.link)
@@ -308,7 +301,7 @@ client.on("message", (msg) => {
                     .setColor([
                       getRandomInt(0, 255),
                       getRandomInt(0, 255),
-                      getRandomInt(0, 255),
+                      getRandomInt(0, 255)
                     ])
                     .setURL(json.link)
                     .setDescription("**Fun fact:** " + fact)
@@ -340,7 +333,7 @@ client.on("message", (msg) => {
                     .setColor([
                       getRandomInt(0, 255),
                       getRandomInt(0, 255),
-                      getRandomInt(0, 255),
+                      getRandomInt(0, 255)
                     ])
                     .setURL(json.link)
                     .setDescription("**Fun fact:** " + fact)
@@ -372,7 +365,7 @@ client.on("message", (msg) => {
                     .setColor([
                       getRandomInt(0, 255),
                       getRandomInt(0, 255),
-                      getRandomInt(0, 255),
+                      getRandomInt(0, 255)
                     ])
                     .setURL(json.link)
                     .setDescription("**Fun fact:** " + fact)
@@ -421,7 +414,7 @@ client.on("message", (msg) => {
         "(╯ ͠° ͟ʖ ͡°)╯┻━┻",
         "( ͡°( ͡° ͜ʖ( ͡° ͜ʖ ͡°)ʖ ͡°) ͡°)",
         "¯_(ツ)_/¯",
-        "ಠ_ಠ",
+        "ಠ_ಠ"
       ];
       msg.channel.send(getArrayRandomElement(emojis));
       break;
@@ -447,7 +440,7 @@ client.on("message", (msg) => {
         .setColor([
           getRandomInt(0, 255),
           getRandomInt(0, 255),
-          getRandomInt(0, 255),
+          getRandomInt(0, 255)
         ])
         .addField(
           "Pets",
@@ -485,7 +478,7 @@ Eagle -  2000 <:Alferdocoins:856991023754772521>`
           .setColor([
             getRandomInt(0, 255),
             getRandomInt(0, 255),
-            getRandomInt(0, 255),
+            getRandomInt(0, 255)
           ])
           .setFooter("More features Coming Soon!")
           .setThumbnail(
@@ -569,7 +562,7 @@ Use \`-a my pets\` to view pets owned
                     .setColor([
                       getRandomInt(0, 255),
                       getRandomInt(0, 255),
-                      getRandomInt(0, 255),
+                      getRandomInt(0, 255)
                     ])
                     .setURL(json.link)
                     .setDescription("**Fun fact:** " + fact)
@@ -593,7 +586,7 @@ Use \`-a my pets\` to view pets owned
             .setColor([
               getRandomInt(0, 255),
               getRandomInt(0, 255),
-              getRandomInt(0, 255),
+              getRandomInt(0, 255)
             ])
             .setURL(json.postLink)
             .setImage(json.url)
@@ -633,7 +626,7 @@ Use \`-a my pets\` to view pets owned
           .setColor([
             getRandomInt(0, 255),
             getRandomInt(0, 255),
-            getRandomInt(0, 255),
+            getRandomInt(0, 255)
           ])
           .addField("Coins Earned", ce + " <:Alferdocoins:856991023754772521>")
           .addField("Coin Balance: ", data[msg.author.id] + " coins");
@@ -693,7 +686,7 @@ Happiness: ${value.happiness || 0}
           if (e == key) {
             people.push({
               KEY: key,
-              VALUE: value,
+              VALUE: value
             });
           }
         }
@@ -744,7 +737,7 @@ Happiness: ${value.happiness || 0}
         .setColor([
           getRandomInt(0, 255),
           getRandomInt(0, 255),
-          getRandomInt(0, 255),
+          getRandomInt(0, 255)
         ])
         .setTitle("Pet Actions")
         .setDescription(`**-a pet [pet_name]** - Pet a pet!
@@ -1047,7 +1040,7 @@ Padlocks are applied automatically!`);
             if (e == key) {
               people.push({
                 KEY: key,
-                VALUE: value,
+                VALUE: value
               });
             }
           }
@@ -1060,7 +1053,7 @@ Padlocks are applied automatically!`);
             name: msg.author.tag,
             pic: msg.author.avatar,
             bot: msg.author.bot,
-            full: msg.author,
+            full: msg.author
           };
         } else {
           var tag = client.users.cache.get(msg.content.replace(/\D/g, ""));
@@ -1069,7 +1062,7 @@ Padlocks are applied automatically!`);
             name: tag.tag,
             pic: tag.avatar,
             full: tag,
-            bot: tag.bot,
+            bot: tag.bot
           };
         }
         if (user.bot == false) {
@@ -1106,7 +1099,7 @@ Padlocks are applied automatically!`);
             .setColor([
               getRandomInt(0, 255),
               getRandomInt(0, 255),
-              getRandomInt(0, 255),
+              getRandomInt(0, 255)
             ])
             .setDescription(
               "" +
@@ -1171,9 +1164,7 @@ Padlocks are applied automatically!`);
       } else if (msg.content.startsWith("-a slots")) {
         if (msg.content == "-a slots") {
           var embed = new Discord.MessageEmbed()
-            .setTitle(
-              "Slots"
-            )
+            .setTitle("Slots")
             .setColor([235, 229, 73])
             .setDescription(
               "Incorrect value for slots. Please specify money to earn/lose. Example: -a slots 10"
@@ -1191,11 +1182,13 @@ Padlocks are applied automatically!`);
           ) {
             if (s == "Heads") {
               db[msg.author.id] = db[msg.author.id] + slots;
-							var embed = new Discord.MessageEmbed()
-								.setTitle("Slots")
-								.setColor([235, 229, 73])
-								.setDescription("You won <:Alferdocoins:856991023754772521>⠀" + slots + "!");
-								msg.channel.send(embed);
+              var embed = new Discord.MessageEmbed()
+                .setTitle("Slots")
+                .setColor([235, 229, 73])
+                .setDescription(
+                  "You won <:Alferdocoins:856991023754772521>⠀" + slots + "!"
+                );
+              msg.channel.send(embed);
               fs.writeFileSync(
                 "./database/money.json",
                 JSON.stringify(db, null, "\t"),
@@ -1204,10 +1197,12 @@ Padlocks are applied automatically!`);
             } else {
               db[msg.author.id] = db[msg.author.id] - slots;
               var embed = new Discord.MessageEmbed()
-								.setTitle("Slots")
-								.setColor([235, 229, 73])
-								.setDescription("You lost <:Alferdocoins:856991023754772521>⠀" + slots + "!");
-								msg.channel.send(embed);
+                .setTitle("Slots")
+                .setColor([235, 229, 73])
+                .setDescription(
+                  "You lost <:Alferdocoins:856991023754772521>⠀" + slots + "!"
+                );
+              msg.channel.send(embed);
               fs.writeFileSync(
                 "./database/money.json",
                 JSON.stringify(db, null, "\t"),
@@ -1286,7 +1281,7 @@ Padlocks are applied automatically!`);
                   .setColor([
                     getRandomInt(0, 255),
                     getRandomInt(0, 255),
-                    getRandomInt(0, 255),
+                    getRandomInt(0, 255)
                   ])
                   .setTitle(ucfirst(pet))
                   .setDescription(`You played with your your ${pet}!`)
@@ -1328,6 +1323,9 @@ Padlocks are applied automatically!`);
   }
 });
 client.on("ready", () => {
+	client.user.setActivity('to -a help', { type: 'LISTENING' })
+  .then(presence => console.log(`Activity set to ${presence.activities[0].name}`))
+  .catch(console.error);
   // client.user.setAvatar('https://media.istockphoto.com/vectors/chat-bot-ai-and-customer-service-support-concept-vector-flat-person-vector-id1221348467?b=1&k=6&m=1221348467&s=612x612&w=0&h=eDVkBNvNtCLsXL40pRs4iwMsO0qZgik81JX1FeO713M=')
   console.log(`Logged in as ${client.user.tag}!`);
 });
