@@ -24,6 +24,7 @@ app.listen(port, () => {
 
 const Discord = require("discord.js");
 const client = new Discord.Client();
+const disbut = require('discord.js-buttons')(client);
 
 var dice1 = [1, 2, 3, 4, 5, 6];
 var cf = ["Heads", "Tails"];
@@ -43,6 +44,22 @@ const passive_mode_cooldown = new Set();
 // Server Add
 client.on('guildMemberAdd', member => {
    member.send(`Welcome to the server! To get a list of commands, type  \`-a help\`.`);
+});
+
+client.on('clickButton', async (button) => {
+	console.log(button)
+	button.message.delete()
+  switch(button.id) {
+		case "click_to_function": 
+    	// button.channel.send(`${button.clicker.user.tag} clicked button!`);
+			break;
+		case "cf_restart": 
+			button.channel.send("-a coinflip")
+			break;
+		case "dr_restart": 
+			button.channel.send("-a roll dice")
+			break;
+  }
 });
 
 client.on("message", (msg) => {
@@ -90,6 +107,12 @@ client.on("message", (msg) => {
       break;
     // Credits
     case "-a credits":
+		let button = new disbut.MessageButton()
+					.setStyle('red') //default: blurple
+					.setLabel('View Website') //default: NO_LABEL_PROVIDED
+					.setID('click_to_function') //note: if you use the style "url" you must provide url using .setURL('https://example.com')
+					// .setDisabled();
+					.setURL("[click_to_function](https://alfred.manuthecoder.ml)")
       var embed = new Discord.MessageEmbed()
         .setTitle("Credits")
         .setColor([235, 229, 73])
@@ -114,10 +137,15 @@ client.on("message", (msg) => {
 	`
         );
       msg.channel.send(embed);
+			msg.channel.send("‎", button)
       break;
     // Coin Flip
     case "-a flip coin":
     case "-a coinflip":
+		var button1 = new disbut.MessageButton()
+					.setStyle('red')
+					.setLabel('Coin Flip again')
+					.setID('cf_restart')
       var embed = new Discord.MessageEmbed()
         .setTitle(
           "<:Alferdocoins:856991023754772521> Coin Flip <:Alferdocoins:856991023754772521>"
@@ -125,6 +153,7 @@ client.on("message", (msg) => {
         .setColor([235, 229, 73])
         .addField("Result: ", getArrayRandomElement(cf));
       msg.channel.send(embed);
+			msg.channel.send("‎", button1)
       break;
     // Roll Dice
     case "-a roll dice":
@@ -163,6 +192,11 @@ client.on("message", (msg) => {
         .setThumbnail(img)
         .addField("Result ", res);
       msg.channel.send(embed);
+			var button1 = new disbut.MessageButton()
+					.setStyle('red')
+					.setLabel('Dice Roll again')
+					.setID('dr_restart')
+				msg.channel.send("‎", button1)
       break;
     // Beg for money
     case "-a beg":
@@ -480,7 +514,7 @@ Eagle -  2000 <:Alferdocoins:856991023754772521>`
             getRandomInt(0, 255),
             getRandomInt(0, 255)
           ])
-          .setFooter("More features Coming Soon!")
+          .setFooter("Want more features? Email me at: manuthecoder@protonmail.com")
           .setThumbnail(
             "https://icons-for-free.com/iconfiles/png/512/circle+command+key+keyboard+modifier+icon-1320196704338840666.png"
           )
@@ -503,9 +537,9 @@ Eagle -  2000 <:Alferdocoins:856991023754772521>`
           .addField(
             "Random",
             `
-:person_pouting: \`-a profile\` - View profile
-:robot: \`-a roll dice\` - Roll a dice
-:robot: \`-a rpc [rock, paper, scissors]\` - Rock Paper Scissors (Choose one)
+:person_pouting: \`-a profile\` - View profile	
+:robot: \`-a roll dice\` - Roll a dice	
+:robot: \`-a rpc [rock, paper, scissors]\` - Rock Paper 	Scissors
 <:Alferdocoins:856991023754772521> \`-a flip coin OR -a coinflip\`- Flip a coin
 `
           )
@@ -516,6 +550,7 @@ Eagle -  2000 <:Alferdocoins:856991023754772521>`
 :frame_photo: \`-a random image\` - Show random image
 :robot: \`-a credits\`  - Credits for this bot
 :slight_smile: \`-a r :slight_smile: \` - (For example), react to the last message in current channel
+:8ball: \`-a 8ball [question]\` - 8ball a question
 `
           )
           .addField(
@@ -533,6 +568,7 @@ Eagle -  2000 <:Alferdocoins:856991023754772521>`
             "Shop & Pets",
             `
 Use \`-a shop\` for list of items
+Use \`-a pet actions\` for list of pet actions
 Use \`-a pet list\` for list of pets
 Use \`-a buy [PET NAME]\` to buy a pet
 Use \`-a my pets\` to view pets owned
@@ -925,6 +961,10 @@ Padlocks are applied automatically!`);
         var user = msg.content.replace("-a steal ", "");
         user = user.replace("<@!", "").replace(">", "");
         var tag = client.users.cache.get(user);
+				if(!tag) {
+					msg.reply("Invalid!")
+					return false;
+				}
         if (tag.bot == false) {
           var data = JSON.parse(
             fs.readFileSync("./database/money.json", "utf-8")
@@ -1030,6 +1070,9 @@ Padlocks are applied automatically!`);
         msg.content.startsWith("-a profile") ||
         msg.content.startsWith("-a me")
       ) {
+				if(msg.content.includes("-a meme")) {
+					return false
+				}
         var people = [];
         var db = JSON.parse(fs.readFileSync("./database/money.json", "utf-8"));
         const Guild = client.guilds.cache.get(msg.guild.id); // Getting the guild.
@@ -1057,6 +1100,10 @@ Padlocks are applied automatically!`);
           };
         } else {
           var tag = client.users.cache.get(msg.content.replace(/\D/g, ""));
+					if(!tag) {
+						msg.reply("Invalid User!")
+						return false;
+					}
           var user = {
             id: msg.content.replace(/\D/g, ""),
             name: tag.tag,
@@ -1065,6 +1112,10 @@ Padlocks are applied automatically!`);
             bot: tag.bot
           };
         }
+				if(!user.id || !user.name || !user.full || !user.bot) {
+					msg.reply("Invalid User")
+					return false;
+				}
         if (user.bot == false) {
           var pet_db = JSON.parse(
             fs.readFileSync("./database/pets.json", "utf-8")
@@ -1136,9 +1187,9 @@ Padlocks are applied automatically!`);
           return false;
         }
         var topText =
-          msg.content.replace("-a creatememe", "").split("|")[0] || "Undefined";
+          msg.content.replace("-a creatememe", "").split("|")[0] || "undefined";
         var bottomText =
-          msg.content.replace("-a creatememe", "").split("|")[1] || "Undefined";
+          msg.content.replace("-a creatememe", "").split("|")[1] || "undefined";
         var template =
           msg.content
             .replace("-a creatememe", "")
@@ -1148,7 +1199,7 @@ Padlocks are applied automatically!`);
         console.log(template);
         if (topText && bottomText && template) {
           var image = `https://apimeme.com/meme?meme=${encodeURIComponent(
-            template
+            toTitleCase(template)
           )}&top=${encodeURIComponent(topText)}&bottom=${encodeURIComponent(
             bottomText
           )}`;
@@ -1319,6 +1370,46 @@ Padlocks are applied automatically!`);
           return false;
         }
       }
+			else if (msg.content.startsWith("-a 8ball")) {
+				var question = msg.content.replace("-a 8ball ", "")
+				var e = [
+					['It is Certain.', 1],
+					["Without a doubt", 1],
+					["It is decidedly so.", 1],
+					["Yes definitely.", 1],
+					["You may rely on it.", 1],
+					["As I see it, yes", 1],
+					["Most likely.", 1], 
+					["Outlook good.", 1]
+					["Yes", 1],
+					["Signs point to yes", 1],
+					["Reply hazy, try again", 2],
+					["Ask again later", 2],
+					["Better not tell you now.", 2],
+					["Cannot predict now.", 2],
+					["Concentrate and ask again", 2],
+					["Don't count on it.", 3],
+					["My reply is no.", 3],
+					["My sources say no.", 3],
+					["Outlook not so good.", 3],
+					["Very doubtful.", 3]
+				];
+				e = getArrayRandomElement(e);
+				if(e[1] == 1) {
+					var color = [81, 214, 58];
+				}
+				else if (e[1] == 2) {
+					var color = [252, 186, 3];
+				}
+				else {
+					var color = [222, 38, 53];
+				}
+				var embed = new Discord.MessageEmbed()
+          .setTitle(question)
+          .setColor(color)
+          .setDescription(e[0]);
+        msg.channel.send(embed);
+			}
       break;
   }
 });
@@ -1346,4 +1437,14 @@ function compare(a, b) {
 }
 function ucfirst(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function toTitleCase(str) {
+ const words = str.split(" ");
+
+	for (let i = 0; i < words.length; i++) {
+			words[i] = words[i][0].toUpperCase() + words[i].substr(1);
+	}
+	words.join(" ");
+	return words
 }
