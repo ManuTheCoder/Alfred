@@ -11,13 +11,17 @@
   "repository": "github:ManuTheCoder/Alfred",
   "license": "ISC",
   "dependencies": {
+    "@discordjs/opus": "^0.5.3",
     "discord-buttons": "^3.2.1",
+    "discord-music-system": "^3.3.15",
     "discord.js": "^12.5.3",
     "discord.js-buttons": "^1.0.0",
     "express": "^4.17.1",
+    "ffmpeg-static": "^4.4.0",
     "node-fetch": "^2.6.1",
     "profanities": "^3.0.0",
     "random-animals-pictures": "^1.0.1",
-    "request": "^2.88.2"
+    "request": "^2.88.2",
+    "ytdl-core": "^4.8.3"
   }
 }

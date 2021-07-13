@@ -2,13 +2,14 @@
 	"757736914894848010": {
 		"dog": {
 			"qty": 7,
-			"happiness": 34
+			"happiness": 38
 		},
 		"cat": {
 			"qty": 2
 		},
 		"tropical parakeet": {
-			"qty": 2
+			"qty": 2,
+			"happiness": 1
 		},
 		"eagle": {
 			"qty": 1,

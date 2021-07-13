@@ -17,6 +17,7 @@ const { MessageAttachment } = require("discord.js");
 const port = 3000;
 const fetch = require("node-fetch");
 app.get("/", (req, res) => res.send(contents));
+const ytdl = require('ytdl-core');
 
 app.listen(port, () => {
   console.log(`Alfred listening at http://localhost:${port}`);
@@ -62,7 +63,7 @@ client.on('clickButton', async (button) => {
   }
 });
 
-client.on("message", (msg) => {
+client.on("message", async msg => {
   // console.log(msg)
   console.log(msg.content.toLowerCase());
   switch (msg.content.toLowerCase()) {
@@ -812,7 +813,6 @@ Happiness: ${value.happiness || 0}
       msg.channel.send(`**Purchase complete**
 Padlocks are applied automatically!`);
       break;
-
     default:
       // Rock Paper Scissors
       if (msg.content.startsWith("-a rpc")) {
@@ -863,7 +863,84 @@ Padlocks are applied automatically!`);
             .addField("Computer's input: ", computerInput);
           msg.channel.send(embed);
         }
-      } else if (msg.content.startsWith("-a buy")) {
+      }
+			else if (msg.content.startsWith("-a play")) {
+				var valid = true;
+				var dispatcher
+				// msg.suppressEmbeds(true)
+				if (msg.member.voice.channel) {
+					const connection = await msg.member.voice.channel.join();
+					// Create a dispatcher
+					var audioURL = msg.content.replace("-a play ", "")
+					if(!matchYoutubeUrl(audioURL)) {
+						valid = false;
+						fetch("https://www.googleapis.com/youtube/v3/search?q="+encodeURIComponent(audioURL)+"&key="+process.env.YOUTUBE_TOKEN, { method: "Get" })
+          .then((res) => res.json())
+          .then((json) => {
+						audioURL = "https://www.youtube.com/watch?v=" + json.items[0].id.videoId
+						console.log(audioURL)
+						dispatcher = connection.play(ytdl(audioURL));
+						dispatcher.on('start', () => {
+						console.log('audio.mp3 is now playing!');
+						var res;
+json.items.forEach(data1 => {
+	res += `https://www.youtube.com/watch?v=${data1.id.videoId}
+	`
+})
+			msg.channel.send(new Discord.MessageEmbed()
+            .setTitle("Search Results")
+						.setDescription(res.replace("undefined", ""))
+						.addField("Currently playing", audioURL)
+			)
+			const VoiceID = msg.member.id;
+						client.on("message", (msg) => {
+							if(msg.author.id == VoiceID && msg.content == "-a stop") {
+								connection.disconnect();
+							}
+						})
+					});
+
+					dispatcher.on('finish', () => {
+						connection.disconnect()
+						msg.channel.send(new Discord.MessageEmbed()
+            .setTitle("Finished")
+						.setURL(audioURL)
+						.setDescription("Successfully played " + audioURL))
+						console.log('audio.mp3 has finished playing!');
+					});
+
+					// Always remember to handle errors appropriately!
+					dispatcher.on('error', console.error);
+          });
+					
+						// return false
+					}
+					if(valid == true) {
+						dispatcher = connection.play(ytdl(audioURL));
+
+					dispatcher.on('start', () => {
+						console.log('audio.mp3 is now playing!');
+						msg.channel.send(`Currently playing \`${audioURL}\`!`)
+						client.on("message", (msg) => {
+							if(msg.author.id == msg.member.id && msg.content == "-a stop") {
+								connection.disconnect();
+							}
+						})
+					});
+
+					dispatcher.on('finish', () => {
+						console.log('audio.mp3 has finished playing!');
+					});
+
+					// Always remember to handle errors appropriately!
+					dispatcher.on('error', console.error);
+					}
+				}
+				else {
+					msg.channel.send("You must be in a voice channel first!")
+				}
+			} 
+			else if (msg.content.startsWith("-a buy")) {
         if (msg.content !== "-a buy") {
           var pet = msg.content.replace("-a buy ", "");
           var price = false;
@@ -1112,7 +1189,7 @@ Padlocks are applied automatically!`);
             bot: tag.bot
           };
         }
-				if(!user.id || !user.name || !user.full || !user.bot) {
+				if(!user.id || !user.name || !user.full) {
 					msg.reply("Invalid User")
 					return false;
 				}
@@ -1447,4 +1524,11 @@ function toTitleCase(str) {
 	}
 	words.join(" ");
 	return words
+}
+function matchYoutubeUrl(url) {
+    var p = /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
+    if(url.match(p)){
+        return url.match(p)[1];
+    }
+    return false;
 }
