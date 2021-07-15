@@ -17,7 +17,9 @@ const { MessageAttachment } = require("discord.js");
 const port = 3000;
 const fetch = require("node-fetch");
 app.get("/", (req, res) => res.send(contents));
+
 const ytdl = require('ytdl-core');
+const lyricsFinder = require('lyrics-finder');
 
 app.listen(port, () => {
   console.log(`Alfred listening at http://localhost:${port}`);
@@ -503,27 +505,14 @@ Eagle -  2000 <:Alferdocoins:856991023754772521>`
       msg.channel.send(embed);
       break;
     // Commands list
-    case "-a help":
-    case "-a commands":
-    case "<@!844303394335096862>":
-    case "-a cmds":
-      function createNewEmbed() {
-        const embed = new Discord.MessageEmbed()
-          .setTitle("Commands")
+		case "-a help pictures": 
+		var embed = new Discord.MessageEmbed()
+          .setTitle("Pictures")	
           .setColor([
             getRandomInt(0, 255),
             getRandomInt(0, 255),
             getRandomInt(0, 255)
           ])
-          .setFooter("Want more features? Email me at: manuthecoder@protonmail.com")
-          .setThumbnail(
-            "https://icons-for-free.com/iconfiles/png/512/circle+command+key+keyboard+modifier+icon-1320196704338840666.png"
-          )
-          .addField(
-            "Remember",
-            `
-*All Commands begin with an \`-a\`*`
-          )
           .addField(
             "Random Animal Pics",
             `
@@ -535,28 +524,94 @@ Eagle -  2000 <:Alferdocoins:856991023754772521>`
 :koala: \`-a koala\` - Show me a koala
 `
           )
+        msg.channel.send(embed); break;
+
+		case "-a help music": 
+		var embed = new Discord.MessageEmbed()
+          .setTitle("Pictures")	
+          .setColor([
+            getRandomInt(0, 255),
+            getRandomInt(0, 255),
+            getRandomInt(0, 255)
+          ])
+          .addField(
+            "Music",
+            `
+\`-a lyrics SONG_NAME\` - Find lyrics of song
+\`-a play SONG_NAME\` - Play song in voice channel which you're in
+`
+          )
+        msg.channel.send(embed); break;
+
+			case "-a help random": 
+		var embed = new Discord.MessageEmbed()
+          .setTitle("Pictures")	
+          .setColor([
+            getRandomInt(0, 255),
+            getRandomInt(0, 255),
+            getRandomInt(0, 255)
+          ])
           .addField(
             "Random",
             `
-:person_pouting: \`-a profile\` - View profile	
+:8ball: \`-a 8ball [question]\` - 8ball a question
+:frame_photo: \`-a random image\` - Show random image
 :robot: \`-a roll dice\` - Roll a dice	
 :robot: \`-a rpc [rock, paper, scissors]\` - Rock Paper 	Scissors
 <:Alferdocoins:856991023754772521> \`-a flip coin OR -a coinflip\`- Flip a coin
 `
           )
+        msg.channel.send(embed); break;
+
+							case "-a help meme": 
+		var embed = new Discord.MessageEmbed()
+          .setTitle("Pictures")	
+          .setColor([
+            getRandomInt(0, 255),
+            getRandomInt(0, 255),
+            getRandomInt(0, 255)
+          ])
           .addField(
-            "Other Commands",
+            "Memes!",
             `
 :laughing: \`-a meme\` - Show me a meme!
-:frame_photo: \`-a random image\` - Show random image
-:robot: \`-a credits\`  - Credits for this bot
-:slight_smile: \`-a r :slight_smile: \` - (For example), react to the last message in current channel
-:8ball: \`-a 8ball [question]\` - 8ball a question
+
+Type \`-a creatememe\` for help on how to generate memes!
 `
           )
+        msg.channel.send(embed); break; 
+
+
+							case "-a help other": 
+		var embed = new Discord.MessageEmbed()
+          .setTitle("Pictures")	
+          .setColor([
+            getRandomInt(0, 255),
+            getRandomInt(0, 255),
+            getRandomInt(0, 255)
+          ])
+          .addField(
+            "Other",
+            `
+:person_pouting: \`-a profile\` - View profile	
+\`-a delete 10\` (Or any #) - Delete last # of messages (ADMIN only)
+:slight_smile: \`-a r :slight_smile: \` - (For example), react to the last message in current channel
+:robot: \`-a credits\`  - Credits for this bot
+`
+          )
+        msg.channel.send(embed); break;
+							case "-a help money": 
+		var embed = new Discord.MessageEmbed()
+          .setTitle("Pictures")	
+          .setColor([
+            getRandomInt(0, 255),
+            getRandomInt(0, 255),
+            getRandomInt(0, 255)
+          ])
           .addField(
             "Money",
             `
+:slot_machine: \`-a slots 100\` - Win/lose <:Alferdocoins:856991023754772521> 100
 :moneybag: \`-a steal @user\` - Steal from a user
 :briefcase: \`-a work\` - Work
 :money_mouth: \`-a leaderboard\` - View top 10 richest people in server
@@ -565,16 +620,31 @@ Eagle -  2000 <:Alferdocoins:856991023754772521>`
 :innocent: \`-a toggle passive mode\` Turn on passive mode
 `
           )
-          .addField(
-            "Shop & Pets",
-            `
-Use \`-a shop\` for list of items
-Use \`-a pet actions\` for list of pet actions
-Use \`-a pet list\` for list of pets
-Use \`-a buy [PET NAME]\` to buy a pet
-Use \`-a my pets\` to view pets owned
-`
-          );
+        msg.channel.send(embed); break;
+	
+
+    case "-a help":
+    case "-a commands":
+    case "<@!844303394335096862>":
+    case "-a cmds":
+      function createNewEmbed() {
+        const embed = new Discord.MessageEmbed()
+          .setTitle("Commands")	
+          .setColor([
+            getRandomInt(0, 255),
+            getRandomInt(0, 255),
+            getRandomInt(0, 255)
+          ])
+          .setFooter("Want more features? Email me at: manuthecoder@protonmail.com")
+          .setThumbnail("https://icons-for-free.com/iconfiles/png/512/circle+command+key+keyboard+modifier+icon-1320196704338840666.png")
+          .setDescription(` *All Commands begin with an \`-a\`*` )
+          .addField( "Random Animal Pics", ` \`-a help animal pics\` ` )
+          .addField( "Random", `\`-a help random\`` )
+          .addField( "Music", `\`-a help music\`` )
+          .addField("Other Commands", `\`-a help other\``)
+          .addField("Memes", `\`-a help meme\``)
+          .addField( "Money", ` \`-a help money\` ` )
+          .addField( "Shop & Pets", ` \`-a pet actions\` ` );
         msg.channel.send(embed);
       }
       createNewEmbed();
@@ -777,7 +847,14 @@ Happiness: ${value.happiness || 0}
           getRandomInt(0, 255)
         ])
         .setTitle("Pet Actions")
-        .setDescription(`**-a pet [pet_name]** - Pet a pet!
+        .setDescription(`
+Use \`-a shop\` for list of items
+Use \`-a pet actions\` for list of pet actions
+Use \`-a pet list\` for list of pets
+Use \`-a buy [PET NAME]\` to buy a pet
+Use \`-a my pets\` to view pets owned
+
+**-a pet [pet_name]** - Pet a pet!
 **-a pet play [pet_name]** - Play with a pet
 **-a pet hug [pet_name]** - Hug a pet!
 **-a pet list** - View owned pets!
@@ -891,11 +968,13 @@ json.items.forEach(data1 => {
             .setTitle("Search Results")
 						.setDescription(res.replace("undefined", ""))
 						.addField("Currently playing", audioURL)
+						.addField("Note", "If the video is longer than 2 hours, you might experience minor lag")
 			)
 			const VoiceID = msg.member.id;
 						client.on("message", (msg) => {
 							if(msg.author.id == VoiceID && msg.content == "-a stop") {
 								connection.disconnect();
+								msg.channel.send("Stoped music!")
 							}
 						})
 					});
@@ -940,6 +1019,21 @@ json.items.forEach(data1 => {
 					msg.channel.send("You must be in a voice channel first!")
 				}
 			} 
+			else if(msg.content.startsWith("-a clear")) {
+				var n = msg.content.replace("-a clear", "")
+				if (msg.member.hasPermission("ADMINISTRATOR")) {
+					async function clear() {
+            msg.delete();
+            const fetched = await msg.channel.messages.fetch({limit: n});
+            msg.channel.bulkDelete(fetched);
+        }
+				clear()
+				msg.reply("Cleared "+ n + " messages!")
+				}
+				else {
+					msg.reply("You don't have admin permissions!")
+				}
+			}
 			else if (msg.content.startsWith("-a buy")) {
         if (msg.content !== "-a buy") {
           var pet = msg.content.replace("-a buy ", "");
@@ -1256,7 +1350,9 @@ json.items.forEach(data1 => {
       } else if (msg.content.startsWith("-a creatememe")) {
         if (msg.content == "-a creatememe") {
           msg.channel.send(`Create a meme by typing: 
-\`-a creatememe TOP_TEXT | BOTTOM_TEXT | TEMPLATE_NAME\`					
+\`-a creatememe TOP_TEXT | BOTTOM_TEXT | TEMPLATE_NAME\`
+
+Template Name List:
 	`);
           const attachment = new MessageAttachment("templates.txt");
           // Send the attachment in the message channel
@@ -1267,17 +1363,17 @@ json.items.forEach(data1 => {
           msg.content.replace("-a creatememe", "").split("|")[0] || "undefined";
         var bottomText =
           msg.content.replace("-a creatememe", "").split("|")[1] || "undefined";
+					console.log(topText)
         var template =
           msg.content
             .replace("-a creatememe", "")
             .split("|")[2]
             .trim()
-            .replace(" ", "-") || "10-guy";
+            .replace(/\s/g , "-") || "10-guy";
         console.log(template);
+				template = toTitleCase(template)
         if (topText && bottomText && template) {
-          var image = `https://apimeme.com/meme?meme=${encodeURIComponent(
-            toTitleCase(template)
-          )}&top=${encodeURIComponent(topText)}&bottom=${encodeURIComponent(
+          var image = `https://apimeme.com/meme?meme=${template}&top=${encodeURIComponent(topText)}&bottom=${encodeURIComponent(
             bottomText
           )}`;
           console.log(image);
@@ -1459,6 +1555,7 @@ json.items.forEach(data1 => {
 					["Most likely.", 1], 
 					["Outlook good.", 1]
 					["Yes", 1],
+					["Affirmative", 1],
 					["Signs point to yes", 1],
 					["Reply hazy, try again", 2],
 					["Ask again later", 2],
@@ -1470,6 +1567,7 @@ json.items.forEach(data1 => {
 					["My sources say no.", 3],
 					["Outlook not so good.", 3],
 					["Very doubtful.", 3]
+					["Negative", 3],
 				];
 				e = getArrayRandomElement(e);
 				if(e[1] == 1) {
@@ -1486,6 +1584,19 @@ json.items.forEach(data1 => {
           .setColor(color)
           .setDescription(e[0]);
         msg.channel.send(embed);
+			}
+			else if (msg.content.startsWith("-a lyrics")) {
+(async function(artist, title) {
+    let lyrics = await lyricsFinder(artist, title) || "Not Found!";
+  		msg.channel.send(new Discord.MessageEmbed()
+			.setTitle(ucfirst(msg.content.replace("-a lyrics ", "")))
+			.setColor([
+          getRandomInt(0, 255),
+          getRandomInt(0, 255),
+          getRandomInt(0, 255)
+			])
+			.setDescription(lyrics));
+})("", msg.content.replace("-a lyrics ", ""));
 			}
       break;
   }
