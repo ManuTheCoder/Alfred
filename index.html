@@ -3,6 +3,24 @@
   <head>
     <title>Alfred - The Discord Bot!</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@materializecss/materialize@1.1.0-alpha/dist/css/materialize.min.css">
+    <!-- Primary Meta Tags -->
+<title>Alfred</title>
+<meta name="title" content="Alfred">
+<meta name="description" content="Alfred is a a discord bot with multiple features, such as memes, coin flips, dice rolls, etc.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://alfred.manuthecoder.ml/">
+<meta property="og:title" content="Alfred">
+<meta property="og:description" content="Alfred is a a discord bot with multiple features, such as memes, coin flips, dice rolls, etc.">
+<meta property="og:image" content="https://media.istockphoto.com/vectors/chat-bot-ai-and-customer-service-support-concept-vector-flat-person-vector-id1221348467?b=1&k=6&m=1221348467&s=612x612&w=0&h=eDVkBNvNtCLsXL40pRs4iwMsO0qZgik81JX1FeO713M=">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://alfred.manuthecoder.ml/">
+<meta property="twitter:title" content="Alfred">
+<meta property="twitter:description" content="Alfred is a a discord bot with multiple features, such as memes, coin flips, dice rolls, etc.">
+<meta property="twitter:image" content="https://media.istockphoto.com/vectors/chat-bot-ai-and-customer-service-support-concept-vector-flat-person-vector-id1221348467?b=1&k=6&m=1221348467&s=612x612&w=0&h=eDVkBNvNtCLsXL40pRs4iwMsO0qZgik81JX1FeO713M=">
 		<link rel="shortcut icon" href="https://media.istockphoto.com/vectors/chat-bot-ai-and-customer-service-support-concept-vector-flat-person-vector-id1221348467?b=1&k=6&m=1221348467&s=612x612&w=0&h=eDVkBNvNtCLsXL40pRs4iwMsO0qZgik81JX1FeO713M=">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <style>
@@ -17,6 +35,10 @@
         .bg {
           height: calc(100vh - 56px)
         }
+      }
+      ul:not(.tabs, nav ul, footer ul) li:not(.tab) {
+        list-style-type: circle !important;
+        margin-left:15px !important
       }
     </style>    
   </head>
@@ -40,43 +62,161 @@
       </div>
     </div>
 		<div class="container white-text" id="cmds">
-			<h5>Commands</h5>
-			<pre>	<p>Cats
--a cat - Show me a cat image
--a cat cute - Show me a cat image (CUTE)
--a cat gif - Show me a cat image (GIF)
-Random
--a profile - View profile
--a roll dice - Roll a dice
--a rpc [rock, paper, scissors] - Rock Paper Scissors (Choose one)
--a flip coin OR -a coinflip- Flip a coin
--a help OR -a cmds OR -a commands - Ask me for help
--a meme - Show me a meme!
--a hello - Say Hello to me
+<br>
+<h4>
+Commands
+</h4>
+  <div class="row">
+    <div class="col s12" style="background:transparent !important">
+      <ul class="tabs tabs-fixed-width" style="background:transparent !important">
+        <li class="tab col s3" style="background:transparent !important"><a href="#random">Randomness</a></li>
+        <li class="tab col s3" style="background:transparent !important"><a class="active" href="#pic">Images</a></li>
+        <li class="tab col s3" style="background:transparent !important"><a href="#music">Music</a></li>
+        <li class="tab col s3" style="background:transparent !important"><a href="#embeds">Embeds</a></li>
+        <li class="tab col s3" style="background:transparent !important"><a href="#memes">Memes</a></li>
+        <li class="tab col s3" style="background:transparent !important"><a href="#money">Money</a></li>
+        <li class="tab col s3" style="background:transparent !important"><a href="#shopandpets">Shop &amp; Pets</a></li>
+        <li class="tab col s3" style="background:transparent !important"><a href="#other">Other</a></li>
+        
+      </ul>
+    </div>
+    <div id="random" class="col s12">
+      <ul>
+    <li>-a 8ball [question] - 8ball a question</li>
+    <li>-a roll dice - Roll a dice</li>
+    <li>-a rpc [rock, paper, scissors] - Rock Paper Scissors</li>
+    <li>-a flip coin OR -a coinflip- Flip a coin</li>
+      </ul>
+    </div>
+    <div id="music" class="col s12">
+      <ul>
+        <li>-a lyrics SONG_NAME - Find lyrics of a song</li>
+        <li>-a play SONG_NAME - Play song in voice channel which you're in</li>
+      </ul>
+    </div>
+    <div id="memes" class="col s12">
+    <ul>
+    <li>-a meme   - Show me a meme!</li>
+    <li>Create a meme:  -a creatememe TOP_TEXT | BOTTOM_TEXT | TEMPLATE_NAME </li>
+    </ul>
+    <h5>
+    Templates:
+    </h5>
+  <li>10 Guy</li> <li>1950s Middle Finger</li> <li>1990s First World Problems</li> <li>1st World Canadian Problems</li> <li>2nd Term Obama</li> <li>Aaaaand Its Gone</li> <li>Ace Primo</li> <li>Actual Advice Mallard</li> <li>Adalia Rose</li> <li>Admiral Ackbar Relationship Expert</li> <li>Advice Dog</li> <li>Advice Doge</li> <li>Advice God</li> <li>Advice Peeta</li> <li>Advice Tam</li> <li>Advice Yoda</li> <li>Afraid To Ask Andy</li> <li>Afraid To Ask Andy Closeup</li> <li>Aint Nobody Got Time For That</li> <li>Alan Greenspan</li> <li>Alarm Clock</li> <li>Albert Cagestein</li> <li>Albert Einstein 1</li> <li>Alien Meeting Suggestion</li> <li>Alright Gentlemen We Need A New Idea</li> <li>Always Has Been</li> <li>Alyssa Silent Hill</li> <li>Am I The Only One Around Here</li> <li>American Chopper Argument</li> <li>Ancient Aliens</li> <li>And everybody loses their minds</li> <li>And then I said Obama</li> <li>Angry Asian</li> <li>Angry Baby</li> <li>Angry Birds Pig</li> <li>Angry Bride</li> <li>Angry Chef Gordon Ramsay</li> <li>Angry Chicken Boss</li> <li>Angry Dumbledore</li> <li>Angry Koala</li> <li>Angry Rant Randy</li> <li>Angry Toddler</li> <li>Annoying Childhood Friend</li> <li>Annoying Facebook Girl</li> <li>Anri Stares</li> <li>Anti Joke Chicken</li> <li>Apathetic Xbox Laser</li> <li>Archer</li> <li>Are Your Parents Brother And Sister</li> <li>Are you a Wizard</li> <li>Arrogant Rich Man</li> <li>Art Attack</li> <li>Art Student Owl</li> <li>Arthur Fist</li> <li>Asshole Ref</li> <li>Aunt Carol</li> <li>Austin Powers Honestly</li> <li>Aw Yeah Rage Face</li> <li>Awkward Moment Sealion</li> <li>Awkward Olympics</li> <li>BANE AND BRUCE</li> <li>BM Employees</li> <li>Babushkas On Facebook</li> <li>Baby Cry</li> <li>Baby Godfather</li> <li>Baby Insanity Wolf</li> <li>Back In My Day</li> <li>Bad Advice Cat</li> <li>Bad Joke Eel</li> <li>Bad Luck Bear</li> <li>Bad Luck Brian</li> <li>Bad Luck Hannah</li> <li>Bad Pun Anna Kendrick</li> <li>Bad Pun Dog</li> <li>Bad Wife Worse Mom</li> <li>Bah Humbug</li> <li>Bane</li> <li>Bane Permission</li> <li>Barack And Kumar 2013</li> <li>Barba</li> <li>Barbosa And Sparrow</li> <li>Barney Stinson Win</li> <li>Baromney</li> <li>Baron Creater</li> <li>Bart Simpson Peeking</li> <li>Batman And Superman</li> <li>Batman Slapping Robin</li> <li>Batman Smiles</li> <li>Batmobile</li> <li>Bazooka Squirrel</li> <li>Be Like Bill</li> <li>Bear Grylls</li> <li>Beard Baby</li> <li>Bebo</li> <li>Because Race Car</li> <li>Ben Barba Pointing</li> <li>Bender</li> <li>Benito</li> <li>Bernie I Am Once Again Asking For Your Support</li> <li>Beyonce Knowles Superbowl</li> <li>Beyonce Knowles Superbowl Face</li> <li>Beyonce Superbowl Yell</li> <li>Big Bird</li> <li>Big Bird And Mitt Romney</li> <li>Big Bird And Snuffy</li> <li>Big Ego Man</li> <li>Big Family Comeback</li> <li>Bike Fall</li> <li>Bill Murray Golf</li> <li>Bill Nye The Science Guy</li> <li>Bill OReilly</li> <li>Billy Graham Mitt Romney</li> <li>Bitch Please</li> <li>Black Girl Wat</li> <li>Blank Blue Background</li> <li>Blank Colored Background</li> <li>Blank Comic Panel 1x2</li> <li>Blank Comic Panel 2x1</li> <li>Blank Comic Panel 2x2</li> <li>Blank Nut Button</li> <li>Blank Starter Pack</li> <li>Blank Transparent Square</li> <li>Blank Yellow Sign</li> <li>Blob</li> <li>Blue Futurama Fry</li> <li>Boardroom Meeting Suggestion</li> <li>Bonobo Lyfe</li> <li>Booty Warrior</li> <li>Bothered Bond</li> <li>Brace Yourselves X is Coming</li> <li>Brian Burke On The Phone</li> <li>Brian Griffin</li> <li>Brian Williams Was There</li> <li>Brian Williams Was There 2</li> <li>Brian Williams Was There 3</li> <li>Brian Wilson Vs ZZ Top</li> <li>Britney Spears</li> <li>Bubba And Barack</li> <li>Buddy Christ</li> <li>Buddy The Elf</li> <li>Buff Doge vs Cheems</li> <li>Bullets</li> <li>Burn Kitty</li> <li>Business Cat</li> <li>But Thats None Of My Business</li> <li>But Thats None Of My Business Neutral</li> <li>Butthurt Dweller</li> <li>CASHWAG Crew</li> <li>CURLEY</li> <li>Captain Hindsight</li> <li>Captain Phillips Im The Captain Now</li> <li>Captain Picard Facepalm</li> <li>Car Salesman Slaps Hood</li> <li>Casper</li> <li>Castaway Fire</li> <li>Ceiling Cat</li> <li>Cel Jesuno</li> <li>Cereal Guy</li> <li>Cereal Guy Spitting</li> <li>Cereal Guys Daddy</li> <li>Chad Johnson</li> <li>Chainsaw Bear</li> <li>Challenge Accepted Rage Face</li> <li>Change My Mind</li> <li>Charlie Sheen Derp</li> <li>Chavez</li> <li>Chef Gordon Ramsay</li> <li>Chemistry Cat</li> <li>Chester The Cat</li> <li>Chicken Bob</li> <li>Chief Keef</li> <li>Chihuahua dog</li> <li>Chill Out Lemur</li> <li>Chinese Cat</li> <li>Chocolate Spongebob</li> <li>Chubby Bubbles Girl</li> <li>Chuck Norris</li> <li>Chuck Norris Approves</li> <li>Chuck Norris Finger</li> <li>Chuck Norris Flex</li> <li>Chuck Norris Guns</li> <li>Chuck Norris Laughing</li> <li>Chuck Norris Phone</li> <li>Chuck Norris With Guns</li> <li>Chuckchuckchuck</li> <li>City Bear</li> <li>Cleavage Girl</li> <li>Clefable</li> <li>Close Enough</li> <li>Clown Applying Makeup</li> <li>College Freshman</li> <li>College Liberal</li> <li>Comic Book Guy</li> <li>Computer Guy</li> <li>Computer Guy Facepalm</li> <li>Computer Horse</li> <li>Condescending Goku</li> <li>Condescending Wonka</li> <li>Confession Bear</li> <li>Confused Cam</li> <li>Confused Gandalf</li> <li>Confused Granddad</li> <li>Confused Lebowski</li> <li>Confused Mel Gibson</li> <li>Conspiracy Keanu</li> <li>Consuela</li> <li>Contradictory Chris</li> <li>Cool Cat Stroll</li> <li>Cool Obama</li> <li>Cool Story Bro</li> <li>Corona</li> <li>Costanza</li> <li>Coulson</li> <li>Courage Wolf</li> <li>Crazy Dawg</li> <li>Crazy Girlfriend Praying Mantis</li> <li>Crazy Hispanic Man</li> <li>Creeper Dog</li> <li>Creepy Condescending Wonka</li> <li>Criana</li> <li>Crosseyed Goku</li> <li>Crying Because Of Cute</li> <li>Cute Cat</li> <li>Cute Dog</li> <li>Cute Puppies</li> <li>DJ Pauly D</li> <li>Dad Joke Dog</li> <li>Dafuq Did I Just Read</li> <li>Dallas Cowboys</li> <li>Dancing Trollmom</li> <li>Darth Maul</li> <li>Darti Boy</li> <li>Dat Ass</li> <li>Dat Boi</li> <li>Dating Site Murderer</li> <li>Dave Chappelle</li> <li>Dead Space</li> <li>Deadpool Pick Up Lines</li> <li>Deadpool Surprised</li> <li>Depressed Cat</li> <li>Depression Dog</li> <li>Derp</li> <li>Derpina</li> <li>Determined Guy Rage Face</li> <li>Dexter</li> <li>Dick Cheney</li> <li>Disappointed Tyson</li> <li>Disaster Girl</li> <li>Distracted Boyfriend</li> <li>Do I Care Doe</li> <li>Doge</li> <li>Doge 2</li> <li>Dolph Ziggler Sells</li> <li>Donald Trump sewing his name into the American Flag</li> <li>Dont You Squidward</li> <li>DoucheBag DJ</li> <li>Doug</li> <li>Down Syndrome</li> <li>Downcast Dark Souls</li> <li>Downvoting Roman</li> <li>Dr Crane</li> <li>Dr Evil</li> <li>Dr Evil Laser</li> <li>Drake Bad Good</li> <li>Drake Hotline Bling</li> <li>Drunk Baby</li> <li>Duck Face</li> <li>Duck Face Chicks</li> <li>Dumb Blonde</li> <li>Dwight Schrute</li> <li>Dwight Schrute 2</li> <li>ERMAHGERD TWERLERT</li> <li>Edu Camargo</li> <li>Edward Elric 1</li> <li>Efrain Juarez</li> <li>Eighties Teen</li> <li>Eminem</li> <li>Empty Red And Black</li> <li>Endel Tulviste</li> <li>Engineering Professor</li> <li>Epic Handshake</li> <li>Epicurist Kid</li> <li>Ermahgerd Berks</li> <li>Ermahgerd Beyonce</li> <li>Ermahgerd IPHERN 3GM</li> <li>Error 404</li> <li>Evil Baby</li> <li>Evil Cows</li> <li>Evil Kermit</li> <li>Evil Otter</li> <li>Evil Plotting Raccoon</li> <li>Evil Toddler</li> <li>Excited Cat</li> <li>Excited Minions</li> <li>Expanding Brain</li> <li>Eye Of Sauron</li> <li>FFFFFFFUUUUUUUUUUUU</li> <li>FRANGO</li> <li>Fabulous Frank And His Snake</li> <li>Face You Make Robert Downey Jr</li> <li>Facepalm Bear</li> <li>Fake Hurricane Guy</li> <li>Family Guy Brian</li> <li>Family Guy Peter</li> <li>Family Tech Support Guy</li> <li>Fast Furious Johnny Tran</li> <li>Fat Cat</li> <li>Fat Val Kilmer</li> <li>Father Ted</li> <li>Fear And Loathing Cat</li> <li>Feels Bad Frog   Feels Bad Man</li> <li>Felix Baumgartner</li> <li>Felix Baumgartner Lulz</li> <li>Fernando Litre</li> <li>Fifa E Call Of Duty</li> <li>Fim De Semana</li> <li>Finding Neverland</li> <li>Fini</li> <li>Finn The Human</li> <li>First Day On The Internet Kid</li> <li>First World Frat Guy</li> <li>First World Problems</li> <li>First World Problems Cat</li> <li>First World Stoner Problems</li> <li>Fk Yeah</li> <li>Flavor Flav</li> <li>Foal Of Mine</li> <li>Folean Dynamite</li> <li>Forever Alone</li> <li>Forever Alone Christmas</li> <li>Forever Alone Happy</li> <li>Foul Bachelor Frog</li> <li>Foul Bachelorette Frog</li> <li>Friend Zone Fiona</li> <li>Frowning Nun</li> <li>Frustrated Boromir</li> <li>Frustrating Mom</li> <li>Futurama Fry</li> <li>Futurama Leela</li> <li>Futurama Zoidberg</li> <li>Gaga Baby</li> <li>Gandhi</li> <li>Gangnam Style</li> <li>Gangnam Style PSY</li> <li>Gangnam Style2</li> <li>Gangster Baby</li> <li>Gasp Rage Face</li> <li>George Bush</li> <li>George Washington</li> <li>Ghetto Jesus</li> <li>Ghost Nappa</li> <li>Giovanni Vernia</li> <li>Give me Karma   Beating the dead horse</li> <li>Gladys Falcon</li> <li>God</li> <li>Gollum</li> <li>Good Fellas Hilarious</li> <li>Good Guy Greg</li> <li>Good Guy Pizza Rolls</li> <li>Good Guy Putin</li> <li>Good Guy Socially Awkward Penguin</li> <li>Google Chrome</li> <li>Gordo</li> <li>Got Room For One More</li> <li>Gotta Go Cat</li> <li>Grandma Finds The Internet</li> <li>Green Day</li> <li>Grumpy Cat</li> <li>Grumpy Cat Bed</li> <li>Grumpy Cat Birthday</li> <li>Grumpy Cat Christmas</li> <li>Grumpy Cat Does Not Believe</li> <li>Grumpy Cat Halloween</li> <li>Grumpy Cat Happy</li> <li>Grumpy Cat Mistletoe</li> <li>Grumpy Cat Not Amused</li> <li>Grumpy Cat Reverse</li> <li>Grumpy Cat Sky</li> <li>Grumpy Cat Star Wars</li> <li>Grumpy Cat Table</li> <li>Grumpy Cat Top Hat</li> <li>Grumpy Cats Father</li> <li>Grumpy Toad</li> <li>Grus Plan</li> <li>Guinness World Record</li> <li>Guy Fawkes</li> <li>Guy Holding Cardboard Sign</li> <li>Hal Jordan</li> <li>Hamtaro</li> <li>Han Solo</li> <li>Happy Guy Rage Face</li> <li>Happy Minaj</li> <li>Happy Minaj 2</li> <li>Happy Star Congratulations</li> <li>Hard To Swallow Pills</li> <li>Hardworking Guy</li> <li>Harley Quinn</li> <li>Harmless Scout Leader</li> <li>Harper WEF</li> <li>Harry Potter Ok</li> <li>Hawkward</li> <li>He Needs The Vaccine</li> <li>He Will Never Get A Girlfriend</li> <li>Headbanzer</li> <li>Headless Rider DRRR</li> <li>Heavy Breathing Cat</li> <li>Hedonism Bot</li> <li>Hello Kassem</li> <li>Hello Kitty</li> <li>Helpful Tyler Durden</li> <li>Henry David Thoreau</li> <li>Hercules Hades</li> <li>Heres Johnny</li> <li>Herm Edwards</li> <li>Hey Internet</li> <li>Hide Yo Kids Hide Yo Wife</li> <li>Hide the Pain Harold</li> <li>High Dog</li> <li>High Expectations Asian Father</li> <li>Hillary Clinton</li> <li>Hillary Clinton Cellphone</li> <li>Hipster Ariel</li> <li>Hipster Barista</li> <li>Hipster Kitty</li> <li>Hohoho</li> <li>Homophobic Seal</li> <li>Hoody Cat</li> <li>Hora Extra</li> <li>Hornist Hamster</li> <li>Horny Harry</li> <li>Hot Caleb</li> <li>Hot Scale</li> <li>Hotline Miami Richard</li> <li>House Bunny</li> <li>How About No Bear</li> <li>How Tough Are You</li> <li>Hypnotoad</li> <li>Hypocritical Islam Terrorist</li> <li>Hysterical Tom</li> <li>I Am Not A Gator Im A X</li> <li>I Bet Hes Thinking About Other Women</li> <li>I Forsee</li> <li>I Guarantee It</li> <li>I Have No Idea What I Am Doing</li> <li>I Have No Idea What I Am Doing Dog</li> <li>I Know Fuck Me Right</li> <li>I Know That Feel Bro</li> <li>I Lied 2</li> <li>I See Dead People</li> <li>I Should Buy A Boat Cat</li> <li>I Too Like To Live Dangerously</li> <li>I Was Told There Would Be</li> <li>I Will Find You And Kill You</li> <li>Idiot Nerd Girl</li> <li>Idiotaco</li> <li>If You Know What I Mean Bean</li> <li>Ill Have You Know Spongebob</li> <li>Ill Just Wait Here</li> <li>Im Curious Nappa</li> <li>Im Fabulous Adam</li> <li>Im The Captain Now</li> <li>Imagination Spongebob</li> <li>Impossibru Guy Original</li> <li>Inception</li> <li>Inhaling Seagull</li> <li>Inigo Montoya</li> <li>Innocent Sasha</li> <li>Insanity Puppy</li> <li>Insanity Wolf</li> <li>Intelligent Dog</li> <li>Internet Explorer</li> <li>Internet Guide</li> <li>Interupting Kanye</li> <li>Invalid Argument Vader</li> <li>Is This A Pigeon</li> <li>Islam Rage   Angry Muslim</li> <li>Its Finally Over</li> <li>Its Not Going To Happen</li> <li>Its True All of It Han Solo</li> <li>Jack Nicholson The Shining Snow</li> <li>Jack Sparrow Being Chased</li> <li>Jackie Chan WTF</li> <li>Jammin Baby</li> <li>Jay Knows Facts</li> <li>Jehovas Witness Squirrel</li> <li>Jerkoff Javert</li> <li>Jersey Santa</li> <li>Jessica Nigri Cosplay</li> <li>Jesus Talking To Cool Dude</li> <li>Jim Lehrer The Man</li> <li>Joe Biden</li> <li>John Riley Condescension</li> <li>Joker</li> <li>Joker Rainbow Hands</li> <li>Jon Stewart Skeptical</li> <li>Joo Espontneo</li> <li>Joseph Ducreux</li> <li>Justin Bieber Suit</li> <li>Karate Kid</li> <li>Karate Kyle</li> <li>Keep Calm And Carry On Aqua</li> <li>Keep Calm And Carry On Black</li> <li>Keep Calm And Carry On Purple</li> <li>Keep Calm And Carry On Red</li> <li>Kevin Hart</li> <li>Kevin Hart The Hell</li> <li>Kill You Cat</li> <li>Kill Yourself Guy</li> <li>Kim Jong Il Y U No</li> <li>Kim Jong Un Sad</li> <li>Koala</li> <li>Kobe</li> <li>Kool Kid Klan</li> <li>Krusty Krab Vs Chum Bucket</li> <li>Krusty Krab Vs Chum Bucket Blank</li> <li>Kyon Face Palm</li> <li>LIGAF</li> <li>LOL Guy</li> <li>Lame Pun Coon</li> <li>Larfleeze</li> <li>Larry The Cable Guy</li> <li>Laughing Goat</li> <li>Laughing Leo</li> <li>Laughing Men In Suits</li> <li>Laughing Villains</li> <li>Laundry Viking</li> <li>Lazy College Senior</li> <li>Left Exit 12 Off Ramp</li> <li>Legal Bill Murray</li> <li>Leonardo Dicaprio Cheers</li> <li>Leonardo Dicaprio Wolf Of Wall Street</li> <li>Lethal Weapon Danny Glover</li> <li>Lewandowski E Reus</li> <li>Liam Neeson Taken</li> <li>Liam Neeson Taken 2</li> <li>Life Sucks</li> <li>Lil Wayne</li> <li>Lion King</li> <li>Little Romney</li> <li>Look At All These</li> <li>Look At Me</li> <li>Look Son</li> <li>Luiz Fabiano</li> <li>Macklemore Thrift Store</li> <li>Mad Money Jim Cramer</li> <li>Mad Moxxi</li> <li>Malicious Advice Mallard</li> <li>Mamimoe</li> <li>Manning Broncos</li> <li>Mario Hammer Smash</li> <li>Marked Safe From</li> <li>Maroney And Obama Not Impressed</li> <li>Marvel Civil War</li> <li>Marvel Civil War 1</li> <li>Marvel Civil War 2</li> <li>Matanza</li> <li>Matrix Morpheus</li> <li>Maury Lie Detector</li> <li>Mayu Watanabe</li> <li>McKayla Maroney Not Impressed</li> <li>McKayla Maroney Not Impressed2</li> <li>McMelch</li> <li>Mega Rage Face</li> <li>Member Berries</li> <li>Meme Dad Creature</li> <li>Memeo</li> <li>Men In Black</li> <li>Men Laughing</li> <li>Merida Brave</li> <li>Metal Jesus</li> <li>Mexican Pizza</li> <li>Michael Jackson Popcorn</li> <li>Michael Phelps Death Stare</li> <li>Minegishi Minami</li> <li>Minegishi Minami2</li> <li>Minor Mistake Marvin</li> <li>Misunderstood Mitch</li> <li>Mitch McConnell</li> <li>Mocking Spongebob</li> <li>Modern Warfare 3</li> <li>Molly Weasley</li> <li>Money Man</li> <li>Money Money</li> <li>Monkey Business</li> <li>Monkey OOH</li> <li>Monkey Puppet</li> <li>Morgan Freeman Good Luck</li> <li>Morpheus</li> <li>Morty</li> <li>Mother Of God</li> <li>Mozart Not Sure</li> <li>Mr Black Knows Everything</li> <li>Mr Krabs Blur Meme</li> <li>Mr Mackey</li> <li>Mr T</li> <li>Mr T Pity The Fool</li> <li>Mugatu So Hot Right Now</li> <li>Multi Doge</li> <li>Murica</li> <li>Muschamp</li> <li>Musically Oblivious 8th Grader</li> <li>NPC</li> <li>Nabilah Jkt48</li> <li>Nailed It</li> <li>Nakagawa Haruka</li> <li>Natsu</li> <li>Neil deGrasse Tyson</li> <li>Net Noob</li> <li>Nice Guy Loki</li> <li>Nickleback</li> <li>Nicolas Cage   You dont say</li> <li>Nilo</li> <li>Nissim Ourfali</li> <li>No Bullshit Business Baby</li> <li>No I Cant Obama</li> <li>No Nappa Its A Trick</li> <li>No Patrick</li> <li>Not Bad Obama</li> <li>Not Okay Rage Face</li> <li>Not a Meme, Just Boobs</li> <li>Nuclear Explosion</li> <li>OMG Cat</li> <li>OMG Karen</li> <li>Obama</li> <li>Obama Cowboy Hat</li> <li>Obama No Listen</li> <li>Obama Romney Pointing</li> <li>Obi Wan Kenobi</li> <li>Oblivious Hot Girl</li> <li>Officer Cartman</li> <li>Oh My God Orange</li> <li>Oh No</li> <li>Okay Guy Rage Face</li> <li>Okay Guy Rage Face2</li> <li>Okay Truck</li> <li>Oku Manami</li> <li>Onde</li> <li>One Does Not Simply</li> <li>Oprah You Get A</li> <li>Oprah You Get A Car Everybody Gets A Car</li> <li>Optimistic Niall</li> <li>Ordinary Muslim Man</li> <li>Original Bad Luck Brian</li> <li>Original I Lied</li> <li>Original Stoner Dog</li> <li>Osabama</li> <li>Our Glorious Leader Nicolas Cage</li> <li>Over Educated Problems</li> <li>Overjoyed</li> <li>Overly Attached Father</li> <li>Overly Attached Girlfriend</li> <li>Overly Attached Nicolas Cage</li> <li>Overly Manly Man</li> <li>Overly Suave IT Guy</li> <li>PPAP</li> <li>PTSD Clarinet Boy</li> <li>Packers</li> <li>Panik Kalm Panik</li> <li>Papa Fking John</li> <li>Paranoid Parrot</li> <li>Pat Quinn</li> <li>Pathetic Spidey</li> <li>Patrick Bateman</li> <li>Patrick Henry</li> <li>Patrick Says</li> <li>Patriotic Eagle</li> <li>Paul Ryan</li> <li>Paul Wonder Years</li> <li>Pedobear</li> <li>Pedophile Orochimaru</li> <li>Pelosi</li> <li>Penguin Gang</li> <li>Pentagon Hexagon Octagon</li> <li>Pepperidge Farm Remembers</li> <li>Perfection Michael Fassbender</li> <li>Permission Bane</li> <li>Persian Cat Room Guardian</li> <li>Persian Cat Room Guardian Single</li> <li>Perturbed Portman</li> <li>Peter Griffin News</li> <li>Peter Parker Cry</li> <li>Philosoraptor</li> <li>Photogenic College Football Player</li> <li>Photogenic Scene Guy</li> <li>Picard Wtf</li> <li>Pickle Rick</li> <li>Pickup Line Panda</li> <li>Pickup Master</li> <li>Pickup Professor</li> <li>Pillow Pet</li> <li>Pink Escalade</li> <li>Pinky and the Brain</li> <li>Pissed Off Obama</li> <li>Police Officer Testifying</li> <li>Pony Shrugs</li> <li>Pope Nicolas Cage</li> <li>Portuguese</li> <li>Pothead Fry</li> <li>Predator</li> <li>Premature Pete</li> <li>Presidential Alert</li> <li>Priority Peter</li> <li>Professor Oak</li> <li>Proper Lady</li> <li>Psy Horse Dance</li> <li>Put It Somewhere Else Patrick</li> <li>Putin</li> <li>Question Rage Face</li> <li>Questionable Strategy Kobe</li> <li>Quit Hatin</li> <li>RPG Fan</li> <li>Rarity</li> <li>Rasta Science Teacher</li> <li>Really Evil College Teacher</li> <li>Rebecca Black</li> <li>Redditors Wife</li> <li>Rediculously Well Mannered Athlete</li> <li>Redneck Randal</li> <li>Reimu Hakurei</li> <li>Relaxed Office Guy</li> <li>Religious Couple</li> <li>Rena Matsui</li> <li>Rich Guy Dont Care</li> <li>Rich Raven</li> <li>Richard Benson</li> <li>Rick</li> <li>Rick Grimes</li> <li>Rick and Carl</li> <li>Rick and Carl 3</li> <li>Rick and Carl Long</li> <li>Rick and Carl Longer</li> <li>Ridiculously Photogenic Guy</li> <li>Ridiculously Photogenic Judge</li> <li>Right In The Childhood</li> <li>Rmoney Again</li> <li>Rob In The Hood</li> <li>Robots</li> <li>Rocket Raccoon</li> <li>Rodgers Doublecheck</li> <li>Roll Safe Think About It</li> <li>Romney</li> <li>Romney And Ryan</li> <li>Romney Bong</li> <li>Romneys Hindenberg</li> <li>Ron Burgundy</li> <li>Ron Swanson</li> <li>Running Away Balloon</li> <li>Ryan Gosling</li> <li>Sad Axl</li> <li>Sad Baby</li> <li>Sad Cat</li> <li>Sad Keanu</li> <li>Sad Pablo Escobar</li> <li>Sad Spiderman</li> <li>Sad X All The Y</li> <li>Sadly I Am Only An Eel</li> <li>Samuel Jackson Glance</li> <li>Samuel L Jackson</li> <li>Sarcastic Anthony</li> <li>Sassy Iguana</li> <li>Satisfied Seal</li> <li>Saw Fulla</li> <li>Say That Again I Dare You</li> <li>Scared Cat</li> <li>Scary Harry</li> <li>Scene Wolf</li> <li>Scooby Doo</li> <li>Scott Howson</li> <li>Scrooge McDuck</li> <li>Scrooge McDuck 2</li> <li>Scumbag Boss</li> <li>Scumbag Brain</li> <li>Scumbag Daylight Savings Time</li> <li>Scumbag Girl</li> <li>Scumbag Job Market</li> <li>Scumbag MSNBC</li> <li>Scumbag Minecraft</li> <li>Scumbag Miraak</li> <li>Scumbag Muslim</li> <li>Scumbag Parents</li> <li>Scumbag Redditor</li> <li>Scumbag Steve</li> <li>Secure Parking</li> <li>See Nobody Cares</li> <li>Self Loathing Otter</li> <li>Selfish Ozzy</li> <li>Sergeant Hartmann</li> <li>Serious Xzibit</li> <li>Seriously Face</li> <li>Sexual Deviant Walrus</li> <li>Sexually Oblivious Girlfriend</li> <li>Sexually Oblivious Rhino</li> <li>Sexy Railroad Spiderman</li> <li>Shaq Only Smokes The Dankest</li> <li>Sheltering Suburban Mom</li> <li>Shocked Ape</li> <li>Short Satisfaction VS Truth</li> <li>Shouter</li> <li>Shrek Cat</li> <li>Shut Up And Take My Money Fry</li> <li>Shutup Batty Boy</li> <li>Sidious Error</li> <li>Sigmund Freud</li> <li>Simba Shadowy Place</li> <li>Simpsons Grandpa</li> <li>Simsimi</li> <li>Since When Were You Under The Impression</li> <li>Sinestro</li> <li>Skeptical Baby</li> <li>Skeptical Swardson</li> <li>Skinhead John Travolta</li> <li>Skype</li> <li>Sleeping Shaq</li> <li>Slenderman</li> <li>Slick Fry</li> <li>Slowpoke</li> <li>Small Dog</li> <li>Small Face Romney</li> <li>Smilin Biden</li> <li>Smiling Cat</li> <li>Smiling Jesus</li> <li>Smirk Rage Face</li> <li>Smug Bear</li> <li>Snape</li> <li>Snoop</li> <li>So God Made A Farmer</li> <li>So I Got That Goin For Me Which Is Nice</li> <li>So I Got That Goin For Me Which Is Nice 2</li> <li>So I Guess You Can Say Things Are Getting Pretty Serious</li> <li>So Many Shirts</li> <li>So Much Drama</li> <li>Socially Awesome Awkward Penguin</li> <li>Socially Awesome Penguin</li> <li>Socially Awkward Awesome Penguin</li> <li>Socially Awkward Couple</li> <li>Socially Awkward Penguin</li> <li>Solemn Lumberjack</li> <li>SonTung</li> <li>Sotally Tober</li> <li>South Park Craig</li> <li>Spacey Casey</li> <li>Spangles</li> <li>Sparta Leonidas</li> <li>Speechless Colbert Face</li> <li>Spiderman Camera</li> <li>Spiderman Computer Desk</li> <li>Spiderman Hospital</li> <li>Spiderman Laugh</li> <li>Spiderman Peter Parker</li> <li>Sponegebob Coffee</li> <li>Spongebob Ight Imma Head Out</li> <li>Spongegar</li> <li>Squidward</li> <li>Star Wars No</li> <li>Star Wars Yoda</li> <li>Stephen Harper Podium</li> <li>Steve Harvey</li> <li>Steve Jobs</li> <li>Stoner Dog</li> <li>Stoner PhD</li> <li>Stop Cop</li> <li>Storytelling Grandpa</li> <li>Subtle Pickup Liner</li> <li>Success Kid</li> <li>Success Kid Girl</li> <li>Success Kid Original</li> <li>Successful Black Man</li> <li>Sudden Clarity Clarence</li> <li>Sudden Disgust Danny</li> <li>Super Birthday Squirrel</li> <li>Super Cool Ski Instructor</li> <li>Super Kami Guru Allows This</li> <li>Superior Wadsworth</li> <li>Surpised Frodo</li> <li>Surprised CatMan</li> <li>Surprised Coala</li> <li>Surprised Koala</li> <li>Surprised Pikachu</li> <li>Surprized Vegeta</li> <li>Suspicious Cat</li> <li>Sweaty Concentrated Rage Face</li> <li>TED</li> <li>TSA Douche</li> <li>Table Flip Guy</li> <li>Take A Seat Cat</li> <li>Talk To Spongebob</li> <li>Tamou</li> <li>Team Rocket</li> <li>Tears Of Joy</li> <li>Tech Impaired Duck</li> <li>Tennis Defeat</li> <li>Terry Davis</li> <li>That Would Be Great</li> <li>Thats Just Something X Say</li> <li>Thats a paddlin</li> <li>The Bobs</li> <li>The Critic</li> <li>The Most Interesting Cat In The World</li> <li>The Most Interesting Justin Bieber</li> <li>The Most Interesting Man In The World</li> <li>The Probelm Is</li> <li>The Problem Is</li> <li>The Rock Driving</li> <li>The Rock It Doesnt Matter</li> <li>The Scroll Of Truth</li> <li>These Arent The Droids You Were Looking For</li> <li>Theyre The Same Picture</li> <li>Think</li> <li>Third World Skeptical Kid</li> <li>Third World Success Kid</li> <li>This Is Fine</li> <li>This Is Where Id Put My Trophy If I Had One</li> <li>Thumbs Up Emoji</li> <li>Time To Fap</li> <li>Today Was A Good Day</li> <li>Tom Hardy</li> <li>Tomas Rosicky</li> <li>Too Damn High</li> <li>Too Drunk At Party Tina</li> <li>Too Kool Kyle</li> <li>Torreshit</li> <li>Tough Guy Wanna Be</li> <li>Trailer Park Boys Bubbles</li> <li>Travelonshark</li> <li>Troll Face</li> <li>Troll Face Colored</li> <li>True Story</li> <li>Trump Bill Signing</li> <li>Turkey</li> <li>Tuxedo Winnie The Pooh</li> <li>Two Buttons</li> <li>UNO Draw 25 Cards</li> <li>USA Lifter</li> <li>Ugly Twins</li> <li>Uncle Sam</li> <li>Unhappy Baby</li> <li>Unhelpful High School Teacher</li> <li>Unicorn MAN</li> <li>Unpopular Opinion Puffin</li> <li>Unsettled Tom</li> <li>Unwanted House Guest</li> <li>V For Vendetta</li> <li>Vali Corleone</li> <li>Vengeance Dad</li> <li>Viking Dudes</li> <li>Vladimir Putin</li> <li>WTF</li> <li>Waiting Skeleton</li> <li>Warning Sign</li> <li>We Will Rebuild</li> <li>Weird Stuff I Do Potoo</li> <li>Welcome To The Internets</li> <li>Well That Escalated Quickly</li> <li>What Do We Want</li> <li>What Do We Want 3</li> <li>What Year Is It</li> <li>Whisper Sloth</li> <li>Who Killed Hannibal</li> <li>Why Cant I</li> <li>Why Cant I Hold All These Limes</li> <li>Why Is The Rum Gone</li> <li>Why Not Both</li> <li>Will Ferrell</li> <li>Wink</li> <li>Woah Kitty</li> <li>Woman Yelling At Cat</li> <li>Wrong Neighboorhood Cats</li> <li>Wrong Number Rita</li> <li>X, X Everywhere</li> <li>X All The Y</li> <li>X Everywhere</li> <li>X X Everywhere</li> <li>Y U No</li> <li>Yakuza</li> <li>Yall Got Any More Of</li> <li>Yall Got Any More Of That</li> <li>Yao Ming</li> <li>Yo Dawg Heard You</li> <li>Yo Mamas So Fat</li> <li>You Dont Say</li> <li>You Dont Want No Part Of This</li> <li>You Get An X And You Get An X</li> <li>You Should Feel Bad Zoidberg</li> <li>You The Real MVP</li> <li>You The Real MVP 2</li> <li>You Underestimate My Power</li> <li>You Were The Chosen One Star Wars</li> <li>Young And Reckless</li> <li>Young Cardi B</li> <li>Youre Too Slow Sonic</li> <li>Yuko With Gun</li> <li>ZNMD</li> <li>Zoidberg Jesus</li> <li>Zombie Bad Luck Brian</li> <li>Zombie Overly Attached Girlfriend</li> <li>Zorg</li> <li>Zuckerberg</li> <li>Zura Janai Katsura Da</li> <li>confession kid</li>
+    </div>
+		<div id="pic" class="col s12">
+			<pre style="font-family:inherit">
+<b>Random Animal Pics</b>
+-a cat - Show me a cat
+-a dog - Show me a dog
+-a bird - Show me a bird
+-a fox - Show me a fox
+-a panda - Show me a panda
+-a red panda - Show me a red panda
+-a kangaroo - Show me a kangaroo
+-a raccoon- Show me a raccoon
+-a koala - Show me a koala
+
+<b>Anime</b>
+
+ -a anime hug - Show me a hugging anime gif
+ -a anime wink - Show me a wink anime gif
+ -a anime pet - Show me a pet anime gif
+
+<b>Image generators</b>
 -a random image - Show random image
--a help - Show an embed
--a credits - Credits for this bot
-Money
--a steal @user - Steal from a user
--a work - Work
--a leaderboard - View top 10 richest people in server
--a beg - Beg for coins
--a balance - View Balance
-Shop & Pets
+-a image generator wasted
+-a image generator glass
+-a image generator passed
+-a image generator jail
+-a image generator comrade
+-a image generator simpcard
+-a image generator simpcard
+-a image generator pixelate
+-a image generator blur
+-a image generator lolice
+-a image generator horny
+
+-a image generator yt comment YOUR_TEXT_HERE
+-a image generator tweet YOUR_TEXT_HERE
+			</pre>
+		</div>
+    <div id="embeds" class="col s12">
+      <pre style="font-family: inherit">
+To create an embed, enter the following text:
+
+-a embed Title | Description | HEX Color Code | Thumbnail URL | Image URL
+
+Where do I find a hex code?
+Search up "Color Picker" on google, pick your color, and copy the HEX code!
+If you want to skip a field, just type "skip", and type the | character
+      </pre>
+    </div>
+    <div id="money" class="col s12">
+      <ul>
+      <li> -a slots 100 - Win/lose :Alfredocoins: 100</li>
+      <li> -a steal @user - Steal from a user</li>
+      <li> -a work - Work</li>
+      <li> -a leaderboard - View top 10 richest people in server</li>
+      <li> -a beg - Beg for coins</li>
+      <li> -a balance - View Balance</li>
+      <li> -a toggle passive mode Turn on passive mode</li>
+      </ul>
+    </div>
+    <div id="shopandpets" class="col s12">
+<pre style="font-family: inherit">
 Use -a shop for list of items
+Use -a pet actions for list of pet actions
 Use -a pet list for list of pets
 Use -a buy [PET NAME] to buy a pet
 Use -a my pets to view pets owned
 
-More features Coming Soon!</p>
-
-			</pre>
+-a pet [pet_name] - Pet a pet!
+-a pet play [pet_name] - Play with a pet
+-a pet hug [pet_name] - Hug a pet!
+-a pet list - View owned pets!
+</pre>
+    </div>
+    <div id="other" class="col s12">
+      <ul>
+        <li> -a bday Name | Message - Wish someone happy birthday, with a gif, embed, and message!</li>
+        <li>-a profile - View profile</li>
+        <li>-a delete 10 (Or any #) - Delete last # of messages (ADMIN only)</li>
+        <li> -a r :slight_smile:  - (For example), react to the last message in current channel</li>
+        <li>-a credits - Credits for this bot</li>
+      </ul>
+    </div>
+  </div>
+        
 		</div>
     <div id="terms" class="modal">
       <div class="modal-content">
         <h5>Terms and Conditions</h5> <p>Last updated: June 20, 2021</p> <p>Please read these terms and conditions carefully before using Our Service.</p> <h5>Interpretation and Definitions</h5> <h6>Interpretation</h6> <p>The words of which the initial letter is capitalized have meanings defined under the following conditions. The following definitions shall have the same meaning regardless of whether they appear in singular or in plural.</p> <h6>Definitions</h6> <p>For the purposes of these Terms and Conditions:</p> <ul> <li> <p><strong>Affiliate</strong> means an entity that controls, is controlled by or is under common control with a party, where &quot;control&quot; means ownership of 50% or more of the shares, equity interest or other securities entitled to vote for election of directors or other managing authority.</p> </li> <li> <p><strong>Country</strong> refers to: California,  United States</p> </li> <li> <p><strong>Company</strong> (referred to as either &quot;the Company&quot;, &quot;We&quot;, &quot;Us&quot; or &quot;Our&quot; in this Agreement) refers to Alfred.</p> </li> <li> <p><strong>Device</strong> means any device that can access the Service such as a computer, a cellphone or a digital tablet.</p> </li> <li> <p><strong>Service</strong> refers to the Website.</p> </li> <li> <p><strong>Terms and Conditions</strong> (also referred as &quot;Terms&quot;) mean these Terms and Conditions that form the entire agreement between You and the Company regarding the use of the Service. This Terms and Conditions agreement has been created with the help of the <a href="https://www.freeprivacypolicy.com/free-terms-and-conditions-generator/" target="_blank">Terms and Conditions Generator</a>.</p> </li> <li> <p><strong>Third-party Social Media Service</strong> means any services or content (including data, information, products or services) provided by a third-party that may be displayed, included or made available by the Service.</p> </li> <li> <p><strong>Website</strong> refers to Alfred, accessible from <a href="https://alfred.manuthecoder.ml" rel="external nofollow noopener" target="_blank">https://alfred.manuthecoder.ml</a></p> </li> <li> <p><strong>You</strong> means the individual accessing or using the Service, or the company, or other legal entity on behalf of which such individual is accessing or using the Service, as applicable.</p> </li> </ul> <h5>Acknowledgment</h5> <p>These are the Terms and Conditions governing the use of this Service and the agreement that operates between You and the Company. These Terms and Conditions set out the rights and obligations of all users regarding the use of the Service.</p> <p>Your access to and use of the Service is conditioned on Your acceptance of and compliance with these Terms and Conditions. These Terms and Conditions apply to all visitors, users and others who access or use the Service.</p> <p>By accessing or using the Service You agree to be bound by these Terms and Conditions. If You disagree with any part of these Terms and Conditions then You may not access the Service.</p> <p>You represent that you are over the age of 18. The Company does not permit those under 18 to use the Service.</p> <p>Your access to and use of the Service is also conditioned on Your acceptance of and compliance with the Privacy Policy of the Company. Our Privacy Policy describes Our policies and procedures on the collection, use and disclosure of Your personal information when You use the Application or the Website and tells You about Your privacy rights and how the law protects You. Please read Our Privacy Policy carefully before using Our Service.</p> <h5>Links to Other Websites</h5> <p>Our Service may contain links to third-party web sites or services that are not owned or controlled by the Company.</p> <p>The Company has no control over, and assumes no responsibility for, the content, privacy policies, or practices of any third party web sites or services. You further acknowledge and agree that the Company shall not be responsible or liable, directly or indirectly, for any damage or loss caused or alleged to be caused by or in connection with the use of or reliance on any such content, goods or services available on or through any such web sites or services.</p> <p>We strongly advise You to read the terms and conditions and privacy policies of any third-party web sites or services that You visit.</p> <h5>Termination</h5> <p>We may terminate or suspend Your access immediately, without prior notice or liability, for any reason whatsoever, including without limitation if You breach these Terms and Conditions.</p> <p>Upon termination, Your right to use the Service will cease immediately.</p> <h5>Limitation of Liability</h5> <p>Notwithstanding any damages that You might incur, the entire liability of the Company and any of its suppliers under any provision of this Terms and Your exclusive remedy for all of the foregoing shall be limited to the amount actually paid by You through the Service or 100 USD if You haven't purchased anything through the Service.</p> <p>To the maximum extent permitted by applicable law, in no event shall the Company or its suppliers be liable for any special, incidental, indirect, or consequential damages whatsoever (including, but not limited to, damages for loss of profits, loss of data or other information, for business interruption, for personal injury, loss of privacy arising out of or in any way related to the use of or inability to use the Service, third-party software and/or third-party hardware used with the Service, or otherwise in connection with any provision of this Terms), even if the Company or any supplier has been advised of the possibility of such damages and even if the remedy fails of its essential purpose.</p> <p>Some states do not allow the exclusion of implied warranties or limitation of liability for incidental or consequential damages, which means that some of the above limitations may not apply. In these states, each party's liability will be limited to the greatest extent permitted by law.</p> <h5>&quot;AS IS&quot; and &quot;AS AVAILABLE&quot; Disclaimer</h5> <p>The Service is provided to You &quot;AS IS&quot; and &quot;AS AVAILABLE&quot; and with all faults and defects without warranty of any kind. To the maximum extent permitted under applicable law, the Company, on its own behalf and on behalf of its Affiliates and its and their respective licensors and service providers, expressly disclaims all warranties, whether express, implied, statutory or otherwise, with respect to the Service, including all implied warranties of merchantability, fitness for a particular purpose, title and non-infringement, and warranties that may arise out of course of dealing, course of performance, usage or trade practice. Without limitation to the foregoing, the Company provides no warranty or undertaking, and makes no representation of any kind that the Service will meet Your requirements, achieve any intended results, be compatible or work with any other software, applications, systems or services, operate without interruption, meet any performance or reliability standards or be error free or that any errors or defects can or will be corrected.</p> <p>Without limiting the foregoing, neither the Company nor any of the company's provider makes any representation or warranty of any kind, express or implied: (i) as to the operation or availability of the Service, or the information, content, and materials or products included thereon; (ii) that the Service will be uninterrupted or error-free; (iii) as to the accuracy, reliability, or currency of any information or content provided through the Service; or (iv) that the Service, its servers, the content, or e-mails sent from or on behalf of the Company are free of viruses, scripts, trojan horses, worms, malware, timebombs or other harmful components.</p> <p>Some jurisdictions do not allow the exclusion of certain types of warranties or limitations on applicable statutory rights of a consumer, so some or all of the above exclusions and limitations may not apply to You. But in such a case the exclusions and limitations set forth in this section shall be applied to the greatest extent enforceable under applicable law.</p> <h5>Governing Law</h5> <p>The laws of the Country, excluding its conflicts of law rules, shall govern this Terms and Your use of the Service. Your use of the Application may also be subject to other local, state, national, or international laws.</p> <h5>Disputes Resolution</h5> <p>If You have any concern or dispute about the Service, You agree to first try to resolve the dispute informally by contacting the Company.</p> <h5>For European Union (EU) Users</h5> <p>If You are a European Union consumer, you will benefit from any mandatory provisions of the law of the country in which you are resident in.</p> <h5>United States Legal Compliance</h5> <p>You represent and warrant that (i) You are not located in a country that is subject to the United States government embargo, or that has been designated by the United States government as a &quot;terrorist supporting&quot; country, and (ii) You are not listed on any United States government list of prohibited or restricted parties.</p> <h5>Severability and Waiver</h5> <h6>Severability</h6> <p>If any provision of these Terms is held to be unenforceable or invalid, such provision will be changed and interpreted to accomplish the objectives of such provision to the greatest extent possible under applicable law and the remaining provisions will continue in full force and effect.</p> <h6>Waiver</h6> <p>Except as provided herein, the failure to exercise a right or to require performance of an obligation under this Terms shall not effect a party's ability to exercise such right or require such performance at any time thereafter nor shall be the waiver of a breach constitute a waiver of any subsequent breach.</p> <h5>Translation Interpretation</h5> <p>These Terms and Conditions may have been translated if We have made them available to You on our Service. You agree that the original English text shall prevail in the case of a dispute.</p> <h5>Changes to These Terms and Conditions</h5> <p>We reserve the right, at Our sole discretion, to modify or replace these Terms at any time. If a revision is material We will make reasonable efforts to provide at least 30 days' notice prior to any new terms taking effect. What constitutes a material change will be determined at Our sole discretion.</p> <p>By continuing to access or use Our Service after those revisions become effective, You agree to be bound by the revised terms. If You do not agree to the new terms, in whole or in part, please stop using the website and the Service.</p> <h5>Contact Us</h5> <p>If you have any questions about these Terms and Conditions, You can contact us:</p> <ul> <li>By email: manuthecoder@protonmail.com</li> </ul>
       </div>
     </div>
+            <footer class="page-footer blue-grey darken-3">
+          <div class="container">
+            <div class="row">
+              <div class="col l6 s12">
+                <h5 class="white-text">Alfred</h5>
+                <p class="grey-text text-lighten-4">Alfred is a a discord bot with multiple features, such as memes, coin flips, dice rolls, etc.</p>
+              </div>
+              <div class="col l4 offset-l2 s12">
+                <h5 class="white-text">Links</h5>
+                <ul>
+                  <li><a class="grey-text text-lighten-3" href="https://discord.com/api/oauth2/authorize?client_id=844303394335096862&permissions=8&scope=bot">Add to Discord</a></li>
+                  <li><a class="grey-text text-lighten-3" href="https://top.gg/bot/844303394335096862/vote">Vote on top.gg</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="footer-copyright">
+            <div class="container">
+            © 2021 Copyright
+            <a class="grey-text text-lighten-4 right" href="https://manuthecoder.ml/">A bot by ManuTheCoder</a>
+            </div>
+          </div>
+        </footer>
     <script>
       $(document).ready(function(){
         $('.modal').modal({
@@ -88,6 +228,9 @@ More features Coming Soon!</p>
           $('#terms').modal('open')
         }
       })  
+			$(document).ready(function(){
+				$('.tabs').tabs();
+  		});
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@materializecss/materialize@1.1.0-alpha/dist/js/materialize.min.js"></script>
   </body>
