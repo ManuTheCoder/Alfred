@@ -31,7 +31,7 @@ var figlet = require("figlet");
 const lyricsFinder = require("lyrics-finder");
 
 const ap = AutoPoster(
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijg0NDMwMzM5NDMzNTA5Njg2MiIsImJvdCI6dHJ1ZSwiaWF0IjoxNjI3NTY3NjY0fQ.KFNNb7hUOX_WUCRo_Rl1dBpjaKYIs_PFMiSjcQGyrys",
+  process.env.topGGToken,
   client
 );
 
@@ -65,7 +65,7 @@ ${abbrNum(e.shardCount, 2)}
 });
 
 const webhook = new Topgg.Webhook(
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijg0NDMwMzM5NDMzNTA5Njg2MiIsImJvdCI6dHJ1ZSwiaWF0IjoxNjI3NTY3NjY0fQ.KFNNb7hUOX_WUCRo_Rl1dBpjaKYIs_PFMiSjcQGyrys"
+  "topggauth123"
 );
 
 app.post(
@@ -74,19 +74,61 @@ app.post(
     // vote will be your vote object, e.g
     console.log(vote.user); // 395526710101278721 < user who voted\
     console.log(vote); // 395526710101278721 < user who voted\
-    const user = client.users.get(vote.user); // This will get the User Object from the Client#users Collection
+    const user = client.users.cache.get(vote.user); // This will get the User Object from the Client#users Collection
     if (user) {
+			var db = JSON.parse(
+          fs.readFileSync("./database/money.json", "utf-8")
+			);
+			var chestDB = JSON.parse(
+          fs.readFileSync("./database/chests.json", "utf-8")
+			);
+			var xpDB = JSON.parse(fs.readFileSync("./database/xp.json", "utf-8"));
+			if(db[vote.user]) {
+				db[vote.user] = db[vote.user]+100
+			}
+			else {
+				db[vote.user] = 100
+			}
+
+			if(xpDB[vote.user]) {
+				xpDB[vote.user] = xpDB[vote.user]+15
+			}
+			else {
+				xpDB[vote.user] = 15
+			}
+
+			if(chestDB[vote.user]) {
+				chestDB[vote.user]++
+			}
+			else {
+				chestDB[vote.user] = 1
+			}
+			fs.writeFileSync(
+          "./database/money.json",
+          JSON.stringify(db, null, "\t"),
+          "utf-8"
+        );
+				fs.writeFileSync(
+          "./database/chests.json",
+          JSON.stringify(chestDB, null, "\t"),
+          "utf-8"
+        );
+				fs.writeFileSync(
+                  "./database/xp.json",
+                  JSON.stringify(xpDB, null, "\t"),
+                  "utf-8"
+                );
       // This checks if the Bot knows who the User is.
       user.send(
         new Discord.MessageEmbed()
-          .setTitle("Thank you for voting!")
-          .setDescription("Prizes coming soon!")
+          .setTitle(":ballot_box: Thank you for voting! :ballot_box:")
+          .addField("You earned", `
+**+ <:Alferdocoins:856991023754772521>  100**  ⠀  *(${db[vote.user]})*
+**+ :green_circle:  15**  ⠀  *(${xpDB[vote.user]})*
+**+ <:chest:870374435817930835>  1**  ⠀  *(${chestDB[vote.user]})*
+`)
           .setURL("https://top.gg/bot/844303394335096862/vote")
-          .setColor([
-            getRandomInt(0, 255),
-            getRandomInt(0, 255),
-            getRandomInt(0, 255),
-          ])
+          .setColor("#1ca8ed")
       ); // DM the User "Thank you for voting!"
     }
     // You can also throw an error to the listener callback in order to resend the webhook after a few seconds
@@ -100,6 +142,9 @@ function getArrayRandomElement(arr) {
   if (arr && arr.length) {
     return arr[Math.floor(Math.random() * arr.length)];
   }
+}
+Array.prototype.random = function () {
+  return this[Math.floor((Math.random()*this.length))];
 }
 client.login(process.env.discordToken);
 
@@ -136,12 +181,76 @@ client.on("message", async (msg) => {
   console.log(msg.content);
   switch (msg.content.toLowerCase()) {
     // Hello
+		case "-a open chests":
+			var chestDB = JSON.parse(
+          fs.readFileSync("./database/chests.json", "utf-8")
+			);
+			if(chestDB[msg.author.id] && chestDB[msg.author.id] > 0) {
+				var totalItemsEarned = ''
+				var userBalance = 0, xpBalance = 0;
+				repeat(function () { 
+					// document.write('Hi<br>'); 
+					var prizes = ['xp', 'coins', 'coins', 'coins', 'xp', 'xp', 'xp', 'coins', 'coins', 'coins', 'padlock', 'padlock', 'padlock', 'padlock'];
+					var prize = prizes.random();
+					if(prize == 'xp') {
+						var db = JSON.parse(
+							fs.readFileSync("./database/xp.json", "utf-8")
+						);
+						var ct = getRandomInt(10, 100);
+						db[msg.author.id] = db[msg.author.id] + ct || ct
+
+						fs.writeFileSync( "./database/xp.json", JSON.stringify(db, null, "\t"), "utf-8" );
+
+						totalItemsEarned += ("\n + :green_circle: " + ct + " ")
+					}
+					else if(prize == 'coins') {
+						var db = JSON.parse(
+							fs.readFileSync("./database/money.json", "utf-8")
+						);
+						userBalance = db[msg.author.id]
+						var ct = getRandomInt(10, 100);
+						db[msg.author.id] = db[msg.author.id] + ct || ct
+						xpBalance = db[msg.author.id]
+						fs.writeFileSync( "./database/money.json", JSON.stringify(db, null, "\t"), "utf-8" );
+
+						totalItemsEarned += "\n + <:Alferdocoins:856991023754772521> "  + ct + "  "
+					}
+
+					else if(prize == 'padlock') {
+						var db = JSON.parse(
+							fs.readFileSync("./database/padlocks.json", "utf-8")
+						);
+						var ct = getRandomInt(10, 100);
+						db[msg.author.id] = db[msg.author.id] + 1 || 1
+
+						fs.writeFileSync( "./database/padlocks.json", JSON.stringify(db, null, "\t"), "utf-8" );
+
+						// msg.channel.send("You earned 1 :lock: (Padlock) !")
+						totalItemsEarned += "\n + :lock: 1"
+					}
+				}, parseInt(chestDB[msg.author.id]));
+					msg.channel.send(
+						new Discord.MessageEmbed()
+						.setTitle("Opened " + chestDB[msg.author.id] + " chests!")
+						.setFooter("Earn more chests by voting for Alfred!")
+						.addField("You earned: " + totalItemsEarned.replace("undefined", ""))
+						.addField("Balance", userBalance + ' <:Alferdocoins:856991023754772521>')
+						.addField("XP", xpBalance + ' :green_circle:')
+					)
+					fs.writeFileSync(
+										"./database/chests.json",
+										JSON.stringify(chestDB, null, "\t"),
+										"utf-8"
+									);
+				// chestDB[msg.author.id] = 0;
+			}
+			break;
     case "-a toggle passive mode":
       if (passive_mode_cooldown.has(msg.author.id)) {
         var embed = new Discord.MessageEmbed()
           .setTitle("Slow it down!")
           .setColor([222, 38, 53])
-          .setDescription("You cannot enable passive mode again in 1 hour");
+          .setDescription("You cannot enable passive mode gain in 1 hour");
         msg.channel.send(embed);
         // msg.channel.send("Whoah whoah woah. Easy there buddy! There's no point in spamming this command. You are tired from working, and you need to wait 1 min " + "<@!" + msg.author + ">");
       } else {
@@ -754,6 +863,7 @@ Eagle -  2000 <:Alferdocoins:856991023754772521>`
           "Memes!",
           `
 :laughing: \`-a meme\` - Show me a meme!
+:laughing: \`-a joke\` - Tell me a joke!
 
 Type \`-a creatememe\` for help on how to generate memes!
 `
@@ -774,6 +884,8 @@ Type \`-a creatememe\` for help on how to generate memes!
           `
 :partying_face: \`-a bday Name | Message\` - Wish someone happy birthday, with a gif, embed, and message!
 :person_pouting: \`-a profile\` - View profile	
+:person_pouting: \`-a pokedex POKEMON_NAME\` - View profile of pokemon	
+:ice_cube: \`-a mc MC_USERNAME\` - View profile of minecraft user	
 \`-a delete 10\` (Or any #) - Delete last # of messages (ADMIN only)
 :slight_smile: \`-a r :slight_smile: \` - (For example), react to the last message in current channel
 :robot: \`-a credits\`  - Credits for this bot
@@ -1089,6 +1201,27 @@ Use \`-a my pets\` to view pets owned
       msg.channel.send(embed);
       break;
     // SHOP
+		case "-a joke": 
+			fetch(
+          "https://some-random-api.ml/joke",
+          { method: "Get" }
+        )
+          .then((res) => res.json())
+          .then((json) => {
+						if(!json.error) {
+						msg.channel.send(new Discord.MessageEmbed()
+								.setTitle("Joke")
+								.setDescription(json.joke)
+								)
+						}
+						else {
+							msg.channel.send(new Discord.MessageEmbed()
+								.setDescription(ucfirst(json.error))
+								.setTitle("Error!")
+								)
+						}
+          });
+		break;
     case "-a buy padlock":
       var data = JSON.parse(fs.readFileSync("./database/money.json", "utf-8"));
       if (data[msg.author.id] && data[msg.author.id] - 300 >= 0) {
@@ -1182,7 +1315,77 @@ Padlocks are applied automatically!`);
             .addField("Computer's input: ", computerInput);
           msg.channel.send(embed);
         }
-      } else if (msg.content.startsWith("-a image generator yt comment")) {
+      } 
+			else if (msg.content.startsWith("-a pokedex")) {
+				fetch(
+          "https://some-random-api.ml/pokedex?pokemon="+msg.content.replace("-a pokedex ", ""),
+          { method: "Get" }
+        )
+          .then((res) => res.json())
+          .then((json) => {
+						if(!json.error) {
+						msg.channel.send(new Discord.MessageEmbed()
+								.setTitle(ucfirst(json.name))
+								.addField("Type", json.type)
+								.addField("Species", json.species)
+								.addField("Abilities", json.abilities)
+								.addField("Height", json.height)
+								.addField("Weight", json.weight)
+								.addField("Base Experience", json.base_experience)
+								.addField("Gender", json.gender)
+								.addField("Egg Groups", json.egg_groups)
+								.addField("HP", json.stats.hp)
+								.addField("Attack", json.stats.attack)
+								.addField("Defense", json.stats.defense)
+								.addField("Defense", json.stats.defense)
+								.addField("Speed", json.stats.speed)
+								.addField("sp_atk", json.stats.sp_atk)
+								.addField("sp_def", json.stats.sp_def)
+								.addField("Total", json.stats.total)
+								.addField("Evolution Stage", json.family.evolutionStage)
+								.addField("Evolution Line", json.family.evolutionLine)
+								.setThumbnail(json.sprites.animated)
+								.setDescription(json.description)
+								)
+						}
+						else {
+							msg.channel.send(new Discord.MessageEmbed()
+								.setDescription(ucfirst(json.error))
+								.setTitle("Error!")
+								)
+						}
+          });
+			}
+else if (msg.content.startsWith("-a mc")) {
+				fetch(
+          "https://some-random-api.ml/mc?username="+ encodeURI(msg.content.replace("-a mc ", "")),
+          { method: "Get" }
+        )
+          .then((res) => res.json())
+          .then((json) => {
+						if(!json.error) {
+							var names = "";
+							json.name_history.forEach(e => {
+names += `
+${e.name.trim()}
+Changed on: ${e.changedToAt}
+`
+							})
+						msg.channel.send(new Discord.MessageEmbed()
+								.setTitle(ucfirst(json.username))
+								.addField("Previous names: " + names)
+								.addField("UUID", json.uuid)
+								)
+						}
+						else {
+							msg.channel.send(new Discord.MessageEmbed()
+								.setDescription(ucfirst(json.error))
+								.setTitle("Error!")
+								)
+						}
+          });
+			}
+			else if (msg.content.startsWith("-a image generator yt comment")) {
         var link =
           "https://some-random-api.ml/canvas/youtube-comment?avatar=" +
           encodeURIComponent(msg.author.displayAvatarURL({ format: "png" })) +
@@ -1776,7 +1979,7 @@ Template Name List:
       } else if (msg.content.startsWith("-a r")) {
         var emoji = msg.content.replace("-a r ", "");
         msg.channel.lastMessage.react(emoji);
-        msg.channel.messages.fetch({ limit: 10 }).then((res) => {
+        msg.channel.messages.fetch({ limit: 2 }).then((res) => {
           console.log(res);
           let lm = res.last();
           lm.react(emoji);
@@ -2058,4 +2261,8 @@ function abbrNum(number, decPlaces) {
   }
 
   return number;
+}
+function repeat(func, times) {
+    func();
+    times && --times && repeat(func, times);
 }
